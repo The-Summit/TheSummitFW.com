@@ -1,0 +1,27 @@
+.single-programs{
+	.panel-default>.panel-heading{
+		color: #fff;
+		background-color: #974C74;
+	}
+	.panel-group{
+		margin-top: 20px;
+	}
+	.panel-body{
+		font-weight: 300;
+		.presenter{
+			margin-top: 20px;
+		}
+	}
+	h2{
+		color: #A18251;
+	}
+	.media-left{
+		img{
+			width: 128px;
+		}
+	}
+	hr{
+		background: tint(#974C74,50%);
+		@include background(linear-gradient(left,$body-bg, tint(#974C74,50%), $body-bg));		
+	}
+}

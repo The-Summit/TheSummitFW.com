@@ -1,0 +1,15 @@
+/*!
+ * Theme Name: Summit
+ *
+ * Copyright 2013 Ambassador Enterprises
+ */
+// Compass utilities
+@import "compass";
+
+//TS Overrides
+@import "bootstrap-TS";
+@import "glyphicons";
+
+@import "bootstrap";
+
+@import "TS/**/**"

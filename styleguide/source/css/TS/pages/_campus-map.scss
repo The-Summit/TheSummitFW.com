@@ -1,0 +1,57 @@
+.campus-map{
+	svg{
+		font-family: 'Roboto';
+		font-weight: 800;
+		*{
+			@extend .animate-move;
+		}
+		#buildings{
+			rect,polygon{
+				fill: $brand-primary;
+				cursor: pointer;
+			}
+			.active{
+				rect,polygon{
+					fill: $link-color;
+				}
+			}
+		}
+		#letters{
+			circle{
+				fill: $gray;
+				stroke: $gray;
+				stroke-width: 2px;
+			}
+			.active{
+				circle{
+					fill: $brand-warning;
+					stroke: $brand-warning;
+					stroke-width: 5px;
+				}
+			}
+		}
+		#Main_Roads{
+			rect{
+				fill: $gray;
+			}
+		}
+		#vehicles{
+			rect,polygon{
+				fill: $gray-light;
+			}
+		}
+		#numbers{
+			polygon,circle{
+				fill: $gray-light;
+			}
+			text{
+				cursor: pointer;
+			}
+		}
+		#sidewalks{
+			polygon,rect{
+				fill: $gray-lighter;
+			}
+		}
+		}
+}
