@@ -6,10 +6,12 @@
 		<div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2">
 			{% if landing %}
 				<div class="row">
-					<div class="col-md-7">
+					<div class="col-md-8 col-md-offset-2">
 						<img src="{{TimberImage(posts[0].background_image).src|better_resize(1400)}}" class="img-responsive" alt="{{TimberImage(post.logo).title}}"/>
 					</div>
-					<div class="col-md-5">
+				</div>
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
 						<img src="{{TimberImage(posts[0].logo).src|better_resize(1000)}}" class="img-responsive" alt="{{TimberImage(post.logo).title}}"/>
 					</div>
 				</div>
