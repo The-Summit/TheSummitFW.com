@@ -333,34 +333,6 @@ class Crypt_RC2 extends Crypt_Base
     );
 
     /**
-     * Default Constructor.
-     *
-     * Determines whether or not the mcrypt extension should be used.
-     *
-     * $mode could be:
-     *
-     * - CRYPT_RC2_MODE_ECB
-     *
-     * - CRYPT_RC2_MODE_CBC
-     *
-     * - CRYPT_RC2_MODE_CTR
-     *
-     * - CRYPT_RC2_MODE_CFB
-     *
-     * - CRYPT_RC2_MODE_OFB
-     *
-     * If not explicitly set, CRYPT_RC2_MODE_CBC will be used.
-     *
-     * @see Crypt_Base::Crypt_Base()
-     * @param int $mode
-     * @access public
-     */
-    function Crypt_RC2($mode = CRYPT_RC2_MODE_CBC)
-    {
-        parent::Crypt_Base($mode);
-    }
-
-    /**
      * Test for engine validity
      *
      * This is mainly just a wrapper to set things up for Crypt_Base::isValidEngine()
@@ -387,7 +359,7 @@ class Crypt_RC2 extends Crypt_Base
     /**
      * Sets the key length.
      *
-     * Valid key lengths are 1 to 1024.
+     * Valid key lengths are 8 to 1024.
      * Calling this function after setting the key has no effect until the next
      *  Crypt_RC2::setKey() call.
      *
@@ -396,9 +368,16 @@ class Crypt_RC2 extends Crypt_Base
      */
     function setKeyLength($length)
     {
-        if ($length >= 1 && $length <= 1024) {
+        if ($length < 8) {
+            $this->default_key_length = 8;
+        } elseif ($length > 1024) {
+            $this->default_key_length = 128;
+        } else {
             $this->default_key_length = $length;
         }
+        $this->current_key_length = $this->default_key_length;
+
+        parent::setKeyLength($length);
     }
 
     /**
@@ -415,7 +394,7 @@ class Crypt_RC2 extends Crypt_Base
     /**
      * Sets the key.
      *
-     * Keys can be of any length. RC2, itself, uses 1 to 1024 bit keys (eg.
+     * Keys can be of any length. RC2, itself, uses 8 to 1024 bit keys (eg.
      * strlen($key) <= 128), however, we only use the first 128 bytes if $key
      * has more then 128 bytes in it, and set $key to a single null byte if
      * it is empty.
@@ -514,7 +493,7 @@ class Crypt_RC2 extends Crypt_Base
             return $result;
         }
 
-        return parent::encrypt($ciphertext);
+        return parent::decrypt($ciphertext);
     }
 
     /**
@@ -659,7 +638,7 @@ class Crypt_RC2 extends Crypt_Base
         // (Currently, for Crypt_RC2, one generated $lambda_function cost on php5.5@32bit ~60kb unfreeable mem and ~100kb on php5.5@64bit)
         $gen_hi_opt_code = (bool)(count($lambda_functions) < 10);
 
-        // Generation of a uniqe hash for our generated code
+        // Generation of a unique hash for our generated code
         $code_hash = "Crypt_RC2, {$this->mode}";
         if ($gen_hi_opt_code) {
             $code_hash = str_pad($code_hash, 32) . $this->_hashInlineCryptFunction($this->key);

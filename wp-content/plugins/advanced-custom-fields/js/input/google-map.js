@@ -16,6 +16,10 @@
 		$input : null,
 		
 		o : {},
+		api: {
+			sensor:		false,
+			libraries:	'places'
+		},
 		
 		ready : false,
 		geocoder : false,
@@ -29,7 +33,7 @@
 			
 			
 			// find input
-			this.$input = this.$el.find('.value');
+			this.$input = this.$el.find('.input-address');
 			
 			
 			// get options
@@ -407,8 +411,12 @@
 	
 	$(document).on('acf/setup_fields', function(e, el){
 		
+		// reference
+		var self = acf.fields.google_map;
+			
+			
 		// vars
-		$fields = $(el).find('.acf-google-map');
+		var $fields = $(el).find('.acf-google-map');
 		
 		
 		// validate
@@ -422,7 +430,7 @@
 			$.getScript('https://www.google.com/jsapi', function(){
 				
 				// load maps
-			    google.load('maps', '3', { other_params: 'sensor=false&libraries=places', callback: function(){
+				google.load('maps', '3', { other_params: $.param(self.api), callback: function(){
 			    	
 			    	$fields.each(function(){
 					
@@ -442,7 +450,7 @@
 		// no maps or places
 		if( !acf.helpers.isset(window, 'google', 'maps', 'places') ) {
 			
-			google.load('maps', '3', { other_params: 'sensor=false&libraries=places', callback: function(){
+			google.load('maps', '3', { other_params: $.param(self.api), callback: function(){
 				
 				$fields.each(function(){
 					
@@ -456,6 +464,14 @@
 				
 		}
 		
+		
+		// google exists
+		$fields.each(function(){
+					
+			acf.fields.google_map.set({ $el : $(this) }).init();
+			
+		});
+
 		
 		// return
 		return true;
