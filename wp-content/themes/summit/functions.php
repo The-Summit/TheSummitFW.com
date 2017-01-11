@@ -43,7 +43,7 @@ function wptp_add_categories_to_attachments() {
 }  
 add_action( 'init' , 'wptp_add_categories_to_attachments' );
 
-if(is_main_site()){
+if(is_main_site() && !is_admin()){
 	Timber::add_route('/', function($params){
 		$cat_id = get_category_by_slug( "pillars" )->cat_ID;
 		$query = 'cat='. $cat_id;
