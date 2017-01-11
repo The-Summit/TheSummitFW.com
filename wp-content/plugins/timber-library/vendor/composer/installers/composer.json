@@ -8,11 +8,9 @@
         "Aimeos",
         "AGL",
         "AnnotateCms",
-        "Attogram",
         "Bitrix",
         "CakePHP",
         "Chef",
-        "Cockpit",
         "CodeIgniter",
         "concrete5",
         "Craft",
@@ -21,18 +19,15 @@
         "Dolibarr",
         "Drupal",
         "Elgg",
-        "ExpressionEngine",
         "FuelPHP",
         "Grav",
         "Hurad",
-        "ImageCMS",
         "Joomla",
         "Kohana",
         "Laravel",
         "Lithium",
         "Magento",
         "Mako",
-        "Mautic",
         "MODX Evo",
         "MediaWiki",
         "OXID",
@@ -40,11 +35,8 @@
         "Moodle",
         "Piwik",
         "phpBB",
-        "Plentymarkets",
         "PPI",
         "Puppet",
-        "RadPHP",
-        "ReIndex",
         "Roundcube",
         "shopware",
         "SilverStripe",
@@ -54,11 +46,10 @@
         "TYPO3",
         "WolfCMS",
         "WordPress",
-        "YAWIK",
         "Zend",
         "Zikula"
     ],
-    "homepage": "https://composer.github.io/installers/",
+    "homepage": "http://composer.github.com/installers/",
     "authors": [
         {
             "name": "Kyle Robinson Young",
@@ -67,7 +58,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Composer\\Installers\\": "src/Composer/Installers" }
+        "psr-0": { "Composer\\Installers\\": "src/" }
     },
     "extra": {
         "class": "Composer\\Installers\\Plugin",
@@ -80,13 +71,10 @@
         "roundcube/plugin-installer": "*"
     },
     "require": {
-        "composer-plugin-api": "^1.0"
+        "composer-plugin-api": "1.0.0"
     },
     "require-dev": {
         "composer/composer": "1.0.*@dev",
         "phpunit/phpunit": "4.1.*"
-    },
-    "scripts": {
-        "test": "phpunit"
     }
 }

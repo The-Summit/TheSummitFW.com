@@ -18,9 +18,6 @@
     "require-dev": {
         "doctrine/cache": "~1.0"
     },
-    "suggest": {
-        "psr/cache-implementation": "To make use of PSR-6 cache implementation via PsrCacheAdapter."
-    },
     "autoload": {
         "psr-4": {
             "": "lib/"
@@ -33,7 +30,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.2-dev"
+            "dev-master": "1.0-dev"
         }
     }
 }
