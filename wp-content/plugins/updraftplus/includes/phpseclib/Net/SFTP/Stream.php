@@ -146,7 +146,7 @@ class Net_SFTP_Stream
      *
      * @access public
      */
-    function __construct()
+    function Net_SFTP_Stream()
     {
         if (defined('NET_SFTP_STREAM_LOGGING')) {
             echo "__construct()\r\n";

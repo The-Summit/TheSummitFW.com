@@ -248,7 +248,7 @@ var wpInsertPages;
 				}
 
 				// Update save prompt.
-				inputs.submit.val( wpInsertPagesL10n.update );
+				inputs.submit.val( 'Update' );
 
 			// If there's no link, set the default values.
 			} else {

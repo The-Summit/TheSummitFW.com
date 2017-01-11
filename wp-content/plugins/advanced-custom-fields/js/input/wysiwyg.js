@@ -14,12 +14,12 @@
 	
 	var _wysiwyg = acf.fields.wysiwyg = {
 		
-		$el: null,
-		$textarea: null,
+		$el : null,
+		$textarea : null,
 		
-		o: {},
+		o : {},
 		
-		set: function( o ){
+		set : function( o ){
 			
 			// merge in new option
 			$.extend( this, o );
@@ -31,6 +31,9 @@
 			
 			// get options
 			this.o = acf.helpers.get_atts( this.$el );
+			
+			
+			// add ID
 			this.o.id = this.$textarea.attr('id');
 			
 			
@@ -38,7 +41,6 @@
 			return this;
 			
 		},
-		
 		has_tinymce : function(){
 		
 			var r = false;
@@ -77,8 +79,7 @@
 			
 			
 			// vars
-			var id = this.o.id,
-				toolbar = this.get_toolbar(),
+			var toolbar = this.get_toolbar(),
 				command = 'mceAddControl',
 				setting = 'theme_advanced_buttons{i}';
 			
@@ -122,19 +123,15 @@
 			
 			
 			// add editor
-			tinyMCE.execCommand( command, false, id);
+			tinyMCE.execCommand( command, false, this.o.id);
 			
 			
 			// events - load
-			$(document).trigger('acf/wysiwyg/load', id);
+			$(document).trigger('acf/wysiwyg/load', this.o.id);
 			
 			
 			// add events (click, focus, blur) for inserting image into correct editor
-			setTimeout(function(){
-				
-				_wysiwyg.add_events( id );
-				
-			}, 100);
+			this.add_events();
 				
 			
 			// restore tinyMCE.settings
@@ -145,15 +142,18 @@
 			wpActiveEditor = null;
 					
 		},
+		add_events : function(){
 		
-		add_events: function( id ){
-			
 			// vars
-			var editor = tinyMCE.get( id );
+			var id = this.o.id,
+				editor = tinyMCE.get( id );
 			
 			
 			// validate
-			if( !editor ) return;
+			if( !editor )
+			{
+				return;
+			}
 			
 			
 			// vars
@@ -473,7 +473,7 @@
 	*  @created: 22/12/12
 	*/
 	
-	$(window).on('load', function(){
+	$(window).load(function(){
 		
 		// validate
 		if( ! _wysiwyg.has_tinymce() )
@@ -521,7 +521,7 @@
 			// Add events to content editor
 			if( wp_content )
 			{
-				_wysiwyg.add_events('content');
+				_wysiwyg.set({ $el : $('#wp-content-wrap') }).add_events();
 			}
 			
 			

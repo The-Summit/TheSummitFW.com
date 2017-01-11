@@ -19,14 +19,11 @@ if (!is_array(UpdraftPlus_Options::get_updraft_option('updraft_dreamobjects')) &
 
 class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 {
 
-	private $dreamobjects_endpoints = array('objects-us-west-1.dream.io');
-
-	protected function set_region($obj, $region = '', $bucket_name = '') {
+	protected function set_region($obj, $region, $bucket_name='') {
 		$config = $this->get_config();
-		$endpoint = ($region != '' && $region != 'n/a') ? $region : $config['endpoint'];
 		global $updraftplus;
-		if ($updraftplus->backup_time) $updraftplus->log("Set endpoint: $endpoint");
-		$obj->setEndpoint($endpoint);
+		$updraftplus->log("Set endpoint: ".$config['endpoint']);
+		$obj->setEndpoint($config['endpoint']);
 	}
 
 	public function get_credentials() {
@@ -40,12 +37,12 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 		$opts['whoweare'] = 'DreamObjects';
 		$opts['whoweare_long'] = 'DreamObjects';
 		$opts['key'] = 'dreamobjects';
-		if (empty($opts['endpoint'])) $opts['endpoint'] = $this->dreamobjects_endpoints[0];
+		$opts['endpoint'] = 'objects.dreamhost.com';
 		return $opts;
 	}
 
 	public function config_print() {
-		$this->config_print_engine('dreamobjects', 'DreamObjects', 'DreamObjects', 'DreamObjects', 'https://panel.dreamhost.com/index.cgi?tree=storage.dreamhostobjects', '<a href="https://dreamhost.com/cloud/dreamobjects/"><img alt="DreamObjects" src="'.UPDRAFTPLUS_URL.'/images/dreamobjects_logo-horiz-2013.png"></a>', $this->dreamobjects_endpoints);
+		$this->config_print_engine('dreamobjects', 'DreamObjects', 'DreamObjects', 'DreamObjects', 'https://panel.dreamhost.com/index.cgi?tree=storage.dreamhostobjects', '<a href="http://dreamhost.com/cloud/dreamobjects/"><img alt="DreamObjects" src="'.UPDRAFTPLUS_URL.'/images/dreamobjects_logo-horiz-2013.png"></a>');
 	}
 
 	public function credentials_test($posted_settings) {
@@ -53,3 +50,4 @@ class UpdraftPlus_BackupModule_dreamobjects extends UpdraftPlus_BackupModule_s3 
 	}
 
 }
+?>

@@ -17,6 +17,7 @@
  *    as those will not always be available before the taxonomy/post_type is registered.
  *    (they will be available if a value was set, they won't be if it wasn't as the class won't know
  *    that a default needs to be injected).
+ *    Oh and the very few options where the default value is null, i.e. wpseo->'theme_has_description'
  *
  * [Updating/Adding options]
  * - For multisite site_options, please use the WPSEO_Options::update_site_option() method.
@@ -279,6 +280,10 @@ abstract class WPSEO_Option {
 					case 'yandexverify':
 						$service = 'Yandex Webmaster tools';
 						break;
+
+					case 'alexaverify':
+						$regex   = '`^[A-Za-z0-9_-]{20,}$`';
+						$service = 'Alexa ID';
 				}
 
 				if ( preg_match( $regex, $meta ) ) {

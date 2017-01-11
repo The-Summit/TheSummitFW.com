@@ -73,4 +73,5 @@ class WPSEO_OnPage_Request {
 
 		return array();
 	}
+
 }

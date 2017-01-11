@@ -29,27 +29,32 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
 
   public function flush() {
     if (!current_user_can($this->capability)) return;
-
-    add_action( 'admin_head', array($this,'flush_w3tc_cache'));
-    add_action( 'admin_head', array($this,'flush_fastest_cache'));
-    add_action( 'admin_head', array($this,'flush_zen_cache'));
-    add_action( 'admin_head', array($this,'flush_wp_rocket'));
+    delete_option( 'really_simple_ssl_settings_changed');
+    add_action( 'shutdown', array($this,'flush_w3tc_cache'));
+    add_action( 'shutdown', array($this,'flush_fastest_cache'));
+    add_action( 'shutdown', array($this,'flush_zen_cache'));
+    add_action( 'shutdown', array($this,'flush_wp_rocket'));
   }
 
   public function flush_w3tc_cache() {
-    if (function_exists('w3tc_flush_all')) {
-      w3tc_flush_all();
+    if( class_exists('W3_Plugin_TotalCacheAdmin') )
+    {
+      if (function_exists('w3tc_flush_all')) {
+        w3tc_flush_all();
+      }
     }
   }
 
   public function flush_fastest_cache() {
-    if(class_exists('WpFastestCache') ) {
+    if(class_exists('WpFastestCache') )
+    {
       $GLOBALS["wp_fastest_cache"]->deleteCache(TRUE);
     }
   }
 
   public function flush_zen_cache() {
-    if (class_exists('\\zencache\\plugin') ) {
+    if (class_exists('\\zencache\\plugin') )
+    {
       $GLOBALS['zencache']->clear_cache();
     }
   }

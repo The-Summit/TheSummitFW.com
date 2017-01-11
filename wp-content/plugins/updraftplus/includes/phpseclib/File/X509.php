@@ -161,7 +161,6 @@ class File_X509
     var $CertificatePolicies;
     var $AuthorityInfoAccessSyntax;
     var $SubjectAltName;
-    var $SubjectDirectoryAttributes;
     var $PrivateKeyUsagePeriod;
     var $IssuerAltName;
     var $PolicyMappings;
@@ -183,14 +182,6 @@ class File_X509
     var $CertificateIssuer;
     var $HoldInstructionCode;
     var $SignedPublicKeyAndChallenge;
-    /**#@-*/
-
-    /**#@+
-     * ASN.1 syntax for various DN attributes
-     *
-     * @access private
-     */
-    var $PostalAddress;
     /**#@-*/
 
     /**
@@ -261,7 +252,7 @@ class File_X509
     /**
      * The signature subject
      *
-     * There's no guarantee File_X509 is going to re-encode an X.509 cert in the same way it was originally
+     * There's no guarantee File_X509 is going to reencode an X.509 cert in the same way it was originally
      * encoded so we take save the portion of the original cert that the signature would have made for.
      *
      * @var string
@@ -326,7 +317,7 @@ class File_X509
      * @return File_X509
      * @access public
      */
-    function __construct()
+    function File_X509()
     {
         if (!class_exists('Math_BigInteger')) {
             include_once 'Math/BigInteger.php';
@@ -1099,13 +1090,6 @@ class File_X509
             )
         );
 
-        $this->SubjectDirectoryAttributes = array(
-            'type'     => FILE_ASN1_TYPE_SEQUENCE,
-            'min'      => 1,
-            'max'      => -1,
-            'children' => $Attribute
-        );
-
         // adapted from <http://tools.ietf.org/html/rfc2986>
 
         $Attributes = array(
@@ -1273,14 +1257,6 @@ class File_X509
             )
         );
 
-        $this->PostalAddress = array(
-            'type'     => FILE_ASN1_TYPE_SEQUENCE,
-            'optional' => true,
-            'min'      => 1,
-            'max'      => -1,
-            'children' => $this->DirectoryString
-        );
-
         // OIDs from RFC5280 and those RFCs mentioned in RFC5280#section-4.1.1.2
         $this->oids = array(
             '1.3.6.1.5.5.7' => 'id-pkix',
@@ -1315,7 +1291,6 @@ class File_X509
             '2.5.4.9' => 'id-at-streetAddress',
             '2.5.4.45' => 'id-at-uniqueIdentifier',
             '2.5.4.72' => 'id-at-role',
-            '2.5.4.16' => 'id-at-postalAddress',
 
             '0.9.2342.19200300.100.1.25' => 'id-domainComponent',
             '1.2.840.113549.1.9' => 'pkcs-9',
@@ -1449,17 +1424,6 @@ class File_X509
     }
 
     /**
-     * PHP4 compatible Default Constructor.
-     *
-     * @see self::__construct()
-     * @access public
-     */
-    function File_X509()
-    {
-        $this->__construct();
-    }
-
-    /**
      * Load X.509 certificate
      *
      * Returns an associative array describing the X.509 cert or a false if the cert failed to load
@@ -1516,11 +1480,7 @@ class File_X509
 
         $this->signatureSubject = substr($cert, $decoded[0]['content'][0]['start'], $decoded[0]['content'][0]['length']);
 
-        if ($this->_isSubArrayValid($x509, 'tbsCertificate/extensions')) {
-            $this->_mapInExtensions($x509, 'tbsCertificate/extensions', $asn1);
-        }
-        $this->_mapInDNs($x509, 'tbsCertificate/issuer/rdnSequence', $asn1);
-        $this->_mapInDNs($x509, 'tbsCertificate/subject/rdnSequence', $asn1);
+        $this->_mapInExtensions($x509, 'tbsCertificate/extensions', $asn1);
 
         $key = &$x509['tbsCertificate']['subjectPublicKeyInfo']['subjectPublicKey'];
         $key = $this->_reformatKey($x509['tbsCertificate']['subjectPublicKeyInfo']['algorithm']['algorithm'], $key);
@@ -1597,8 +1557,6 @@ class File_X509
         $asn1->loadFilters($filters);
 
         $this->_mapOutExtensions($cert, 'tbsCertificate/extensions', $asn1);
-        $this->_mapOutDNs($cert, 'tbsCertificate/issuer/rdnSequence', $asn1);
-        $this->_mapOutDNs($cert, 'tbsCertificate/subject/rdnSequence', $asn1);
 
         $cert = $asn1->encodeDER($cert, $this->Certificate);
 
@@ -1622,9 +1580,9 @@ class File_X509
      */
     function _mapInExtensions(&$root, $path, $asn1)
     {
-        $extensions = &$this->_subArrayUnchecked($root, $path);
+        $extensions = &$this->_subArray($root, $path);
 
-        if ($extensions) {
+        if (is_array($extensions)) {
             for ($i = 0; $i < count($extensions); $i++) {
                 $id = $extensions[$i]['extnId'];
                 $value = &$extensions[$i]['extnValue'];
@@ -1756,7 +1714,7 @@ class File_X509
                             if ($mapped !== false) {
                                 $values[$j] = $mapped;
                             }
-                            if ($id == 'pkcs-9-at-extensionRequest' && $this->_isSubArrayValid($values, $j)) {
+                            if ($id == 'pkcs-9-at-extensionRequest') {
                                 $this->_mapInExtensions($values, $j, $asn1);
                             }
                         } elseif ($map) {
@@ -1812,68 +1770,6 @@ class File_X509
     }
 
     /**
-     * Map DN values from ANY type to DN-specific internal
-     *   format.
-     *
-     * @param array ref $root
-     * @param string $path
-     * @param object $asn1
-     * @access private
-     */
-    function _mapInDNs(&$root, $path, $asn1)
-    {
-        $dns = &$this->_subArray($root, $path);
-
-        if (is_array($dns)) {
-            for ($i = 0; $i < count($dns); $i++) {
-                for ($j = 0; $j < count($dns[$i]); $j++) {
-                    $type = $dns[$i][$j]['type'];
-                    $value = &$dns[$i][$j]['value'];
-                    if (is_object($value) && strtolower(get_class($value)) == 'file_asn1_element') {
-                        $map = $this->_getMapping($type);
-                        if (!is_bool($map)) {
-                            $decoded = $asn1->decodeBER($value);
-                            $value = $asn1->asn1map($decoded[0], $map);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Map DN values from DN-specific internal format to
-     *   ANY type.
-     *
-     * @param array ref $root
-     * @param string $path
-     * @param object $asn1
-     * @access private
-     */
-    function _mapOutDNs(&$root, $path, $asn1)
-    {
-        $dns = &$this->_subArray($root, $path);
-
-        if (is_array($dns)) {
-            $size = count($dns);
-            for ($i = 0; $i < $size; $i++) {
-                for ($j = 0; $j < count($dns[$i]); $j++) {
-                    $type = $dns[$i][$j]['type'];
-                    $value = &$dns[$i][$j]['value'];
-                    if (is_object($value) && strtolower(get_class($value)) == 'file_asn1_element') {
-                        continue;
-                    }
-
-                    $map = $this->_getMapping($type);
-                    if (!is_bool($map)) {
-                        $value = new File_ASN1_Element($asn1->encodeDER($value, $map));
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Associate an extension ID to an extension mapping
      *
      * @param string $extnId
@@ -1905,8 +1801,6 @@ class File_X509
                 return $this->AuthorityInfoAccessSyntax;
             case 'id-ce-subjectAltName':
                 return $this->SubjectAltName;
-            case 'id-ce-subjectDirectoryAttributes':
-                return $this->SubjectDirectoryAttributes;
             case 'id-ce-privateKeyUsagePeriod':
                 return $this->PrivateKeyUsagePeriod;
             case 'id-ce-issuerAltName':
@@ -1966,8 +1860,6 @@ class File_X509
                 return $this->CertificateIssuer;
             case 'id-ce-holdInstructionCode':
                 return $this->HoldInstructionCode;
-            case 'id-at-postalAddress':
-                return $this->PostalAddress;
         }
 
         return false;
@@ -2159,16 +2051,14 @@ class File_X509
         switch (true) {
             case isset($this->currentCert['tbsCertificate']):
                 // self-signed cert
-                switch (true) {
-                    case !defined('FILE_X509_IGNORE_TYPE') && $this->currentCert['tbsCertificate']['issuer'] === $this->currentCert['tbsCertificate']['subject']:
-                    case defined('FILE_X509_IGNORE_TYPE') && $this->getIssuerDN(FILE_X509_DN_STRING) === $this->getDN(FILE_X509_DN_STRING):
-                        $authorityKey = $this->getExtension('id-ce-authorityKeyIdentifier');
-                        $subjectKeyID = $this->getExtension('id-ce-subjectKeyIdentifier');
-                        switch (true) {
-                            case !is_array($authorityKey):
-                            case is_array($authorityKey) && isset($authorityKey['keyIdentifier']) && $authorityKey['keyIdentifier'] === $subjectKeyID:
-                                $signingCert = $this->currentCert; // working cert
-                        }
+                if ($this->currentCert['tbsCertificate']['issuer'] === $this->currentCert['tbsCertificate']['subject']) {
+                    $authorityKey = $this->getExtension('id-ce-authorityKeyIdentifier');
+                    $subjectKeyID = $this->getExtension('id-ce-subjectKeyIdentifier');
+                    switch (true) {
+                        case !is_array($authorityKey):
+                        case is_array($authorityKey) && isset($authorityKey['keyIdentifier']) && $authorityKey['keyIdentifier'] === $subjectKeyID:
+                            $signingCert = $this->currentCert; // working cert
+                    }
                 }
 
                 if (!empty($this->CAs)) {
@@ -2176,17 +2066,15 @@ class File_X509
                         // even if the cert is a self-signed one we still want to see if it's a CA;
                         // if not, we'll conditionally return an error
                         $ca = $this->CAs[$i];
-                        switch (true) {
-                            case !defined('FILE_X509_IGNORE_TYPE') && $this->currentCert['tbsCertificate']['issuer'] === $ca['tbsCertificate']['subject']:
-                            case defined('FILE_X509_IGNORE_TYPE') && $this->getDN(FILE_X509_DN_STRING, $this->currentCert['tbsCertificate']['issuer']) === $this->getDN(FILE_X509_DN_STRING, $ca['tbsCertificate']['subject']):
-                                $authorityKey = $this->getExtension('id-ce-authorityKeyIdentifier');
-                                $subjectKeyID = $this->getExtension('id-ce-subjectKeyIdentifier', $ca);
-                                switch (true) {
-                                    case !is_array($authorityKey):
-                                    case is_array($authorityKey) && isset($authorityKey['keyIdentifier']) && $authorityKey['keyIdentifier'] === $subjectKeyID:
-                                        $signingCert = $ca; // working cert
-                                        break 3;
-                                }
+                        if ($this->currentCert['tbsCertificate']['issuer'] === $ca['tbsCertificate']['subject']) {
+                            $authorityKey = $this->getExtension('id-ce-authorityKeyIdentifier');
+                            $subjectKeyID = $this->getExtension('id-ce-subjectKeyIdentifier', $ca);
+                            switch (true) {
+                                case !is_array($authorityKey):
+                                case is_array($authorityKey) && isset($authorityKey['keyIdentifier']) && $authorityKey['keyIdentifier'] === $subjectKeyID:
+                                    $signingCert = $ca; // working cert
+                                    break 2;
+                            }
                         }
                     }
                     if (count($this->CAs) == $i && $caonly) {
@@ -2222,17 +2110,15 @@ class File_X509
                 if (!empty($this->CAs)) {
                     for ($i = 0; $i < count($this->CAs); $i++) {
                         $ca = $this->CAs[$i];
-                        switch (true) {
-                            case !defined('FILE_X509_IGNORE_TYPE') && $this->currentCert['tbsCertList']['issuer'] === $ca['tbsCertificate']['subject']:
-                            case defined('FILE_X509_IGNORE_TYPE') && $this->getDN(FILE_X509_DN_STRING, $this->currentCert['tbsCertList']['issuer']) === $this->getDN(FILE_X509_DN_STRING, $ca['tbsCertificate']['subject']):
-                                $authorityKey = $this->getExtension('id-ce-authorityKeyIdentifier');
-                                $subjectKeyID = $this->getExtension('id-ce-subjectKeyIdentifier', $ca);
-                                switch (true) {
-                                    case !is_array($authorityKey):
-                                    case is_array($authorityKey) && isset($authorityKey['keyIdentifier']) && $authorityKey['keyIdentifier'] === $subjectKeyID:
-                                        $signingCert = $ca; // working cert
-                                        break 3;
-                                }
+                        if ($this->currentCert['tbsCertList']['issuer'] === $ca['tbsCertificate']['subject']) {
+                            $authorityKey = $this->getExtension('id-ce-authorityKeyIdentifier');
+                            $subjectKeyID = $this->getExtension('id-ce-subjectKeyIdentifier', $ca);
+                            switch (true) {
+                                case !is_array($authorityKey):
+                                case is_array($authorityKey) && isset($authorityKey['keyIdentifier']) && $authorityKey['keyIdentifier'] === $subjectKeyID:
+                                    $signingCert = $ca; // working cert
+                                    break 2;
+                            }
                         }
                     }
                 }
@@ -2439,9 +2325,6 @@ class File_X509
             case 'uniqueidentifier':
             case 'x500uniqueidentifier':
                 return 'id-at-uniqueIdentifier';
-            case 'postaladdress':
-            case 'id-at-postaladdress':
-                return 'id-at-postalAddress';
             default:
                 return false;
         }
@@ -2531,38 +2414,25 @@ class File_X509
             return false;
         }
 
-        $asn1 = new File_ASN1();
-        $asn1->loadOIDs($this->oids);
-        $filters = array();
-        $filters['value'] = array('type' => FILE_ASN1_TYPE_UTF8_STRING);
-        $asn1->loadFilters($filters);
-        $this->_mapOutDNs($dn, 'rdnSequence', $asn1);
         $dn = $dn['rdnSequence'];
         $result = array();
+        $asn1 = new File_ASN1();
         for ($i = 0; $i < count($dn); $i++) {
             if ($dn[$i][0]['type'] == $propName) {
                 $v = $dn[$i][0]['value'];
-                if (!$withType) {
-                    if (is_array($v)) {
-                        foreach ($v as $type => $s) {
-                            $type = array_search($type, $asn1->ANYmap, true);
-                            if ($type !== false && isset($asn1->stringTypeSize[$type])) {
-                                $s = $asn1->convert($s, $type);
-                                if ($s !== false) {
-                                    $v = $s;
-                                    break;
-                                }
+                if (!$withType && is_array($v)) {
+                    foreach ($v as $type => $s) {
+                        $type = array_search($type, $asn1->ANYmap, true);
+                        if ($type !== false && isset($asn1->stringTypeSize[$type])) {
+                            $s = $asn1->convert($s, $type);
+                            if ($s !== false) {
+                                $v = $s;
+                                break;
                             }
                         }
-                        if (is_array($v)) {
-                            $v = array_pop($v); // Always strip data type.
-                        }
-                    } elseif (is_object($v) && strtolower(get_class($v)) == 'file_asn1_element') {
-                        $map = $this->_getMapping($propName);
-                        if (!is_bool($map)) {
-                            $decoded = $asn1->decodeBER($v);
-                            $v = $asn1->asn1map($decoded[0], $map);
-                        }
+                    }
+                    if (is_array($v)) {
+                        $v = array_pop($v); // Always strip data type.
                     }
                 }
                 $result[] = $v;
@@ -2603,7 +2473,7 @@ class File_X509
         }
 
         // handles everything else
-        $results = preg_split('#((?:^|, *|/)(?:C=|O=|OU=|CN=|L=|ST=|SN=|postalCode=|streetAddress=|emailAddress=|serialNumber=|organizationalUnitName=|title=|description=|role=|x500UniqueIdentifier=|postalAddress=))#', $dn, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $results = preg_split('#((?:^|, *|/)(?:C=|O=|OU=|CN=|L=|ST=|SN=|postalCode=|streetAddress=|emailAddress=|serialNumber=|organizationalUnitName=|title=|description=|role=|x500UniqueIdentifier=))#', $dn, -1, PREG_SPLIT_DELIM_CAPTURE);
         for ($i = 1; $i < count($results); $i+=2) {
             $prop = trim($results[$i], ', =/');
             $value = $results[$i + 1];
@@ -2638,19 +2508,33 @@ class File_X509
                 $filters = array();
                 $filters['rdnSequence']['value'] = array('type' => FILE_ASN1_TYPE_UTF8_STRING);
                 $asn1->loadFilters($filters);
-                $this->_mapOutDNs($dn, 'rdnSequence', $asn1);
                 return $asn1->encodeDER($dn, $this->Name);
+            case FILE_X509_DN_OPENSSL:
+                $dn = $this->getDN(FILE_X509_DN_STRING, $dn);
+                if ($dn === false) {
+                    return false;
+                }
+                $attrs = preg_split('#((?:^|, *|/)[a-z][a-z0-9]*=)#i', $dn, -1, PREG_SPLIT_DELIM_CAPTURE);
+                $dn = array();
+                for ($i = 1; $i < count($attrs); $i += 2) {
+                    $prop = trim($attrs[$i], ', =/');
+                    $value = $attrs[$i + 1];
+                    if (!isset($dn[$prop])) {
+                        $dn[$prop] = $value;
+                    } else {
+                        $dn[$prop] = array_merge((array) $dn[$prop], array($value));
+                    }
+                }
+                return $dn;
             case FILE_X509_DN_CANON:
                 //  No SEQUENCE around RDNs and all string values normalized as
-                // trimmed lowercase UTF-8 with all spacing as one blank.
-                // constructed RDNs will not be canonicalized
+                // trimmed lowercase UTF-8 with all spacing  as one blank.
                 $asn1 = new File_ASN1();
                 $asn1->loadOIDs($this->oids);
                 $filters = array();
                 $filters['value'] = array('type' => FILE_ASN1_TYPE_UTF8_STRING);
                 $asn1->loadFilters($filters);
                 $result = '';
-                $this->_mapOutDNs($dn, 'rdnSequence', $asn1);
                 foreach ($dn['rdnSequence'] as $rdn) {
                     foreach ($rdn as $i => $attr) {
                         $attr = &$rdn[$i];
@@ -2685,13 +2569,7 @@ class File_X509
         // Default is to return a string.
         $start = true;
         $output = '';
-        $result = array();
         $asn1 = new File_ASN1();
-        $asn1->loadOIDs($this->oids);
-        $filters = array();
-        $filters['rdnSequence']['value'] = array('type' => FILE_ASN1_TYPE_UTF8_STRING);
-        $asn1->loadFilters($filters);
-        $this->_mapOutDNs($dn, 'rdnSequence', $asn1);
         foreach ($dn['rdnSequence'] as $field) {
             $prop = $field[0]['type'];
             $value = $field[0]['value'];
@@ -2699,37 +2577,33 @@ class File_X509
             $delim = ', ';
             switch ($prop) {
                 case 'id-at-countryName':
-                    $desc = 'C';
+                    $desc = 'C=';
                     break;
                 case 'id-at-stateOrProvinceName':
-                    $desc = 'ST';
+                    $desc = 'ST=';
                     break;
                 case 'id-at-organizationName':
-                    $desc = 'O';
+                    $desc = 'O=';
                     break;
                 case 'id-at-organizationalUnitName':
-                    $desc = 'OU';
+                    $desc = 'OU=';
                     break;
                 case 'id-at-commonName':
-                    $desc = 'CN';
+                    $desc = 'CN=';
                     break;
                 case 'id-at-localityName':
-                    $desc = 'L';
+                    $desc = 'L=';
                     break;
                 case 'id-at-surname':
-                    $desc = 'SN';
+                    $desc = 'SN=';
                     break;
                 case 'id-at-uniqueIdentifier':
                     $delim = '/';
-                    $desc = 'x500UniqueIdentifier';
-                    break;
-                case 'id-at-postalAddress':
-                    $delim = '/';
-                    $desc = 'postalAddress';
+                    $desc = 'x500UniqueIdentifier=';
                     break;
                 default:
                     $delim = '/';
-                    $desc = preg_replace('#.+-([^-]+)$#', '$1', $prop);
+                    $desc = preg_replace('#.+-([^-]+)$#', '$1', $prop) . '=';
             }
 
             if (!$start) {
@@ -2749,18 +2623,12 @@ class File_X509
                 if (is_array($value)) {
                     $value = array_pop($value); // Always strip data type.
                 }
-            } elseif (is_object($value) && strtolower(get_class($value)) == 'file_asn1_element') {
-                $callback = create_function('$x', 'return "\x" . bin2hex($x[0]);');
-                $value = strtoupper(preg_replace_callback('#[^\x20-\x7E]#', $callback, $value->element));
             }
-            $output.= $desc . '=' . $value;
-            $result[$desc] = isset($result[$desc]) ?
-                array_merge((array) $dn[$prop], array($value)) :
-                $value;
+            $output.= $desc . $value;
             $start = false;
         }
 
-        return $format == FILE_X509_DN_OPENSSL ? $result : $output;
+        return $output;
     }
 
     /**
@@ -3038,10 +2906,8 @@ class File_X509
             return false;
         }
 
-        $this->_mapInAttributes($csr, 'certificationRequestInfo/attributes', $asn1);
-        $this->_mapInDNs($csr, 'certificationRequestInfo/subject/rdnSequence', $asn1);
-
         $this->dn = $csr['certificationRequestInfo']['subject'];
+        $this->_mapInAttributes($csr, 'certificationRequestInfo/attributes', $asn1);
 
         $this->signatureSubject = substr($orig, $decoded[0]['content'][0]['start'], $decoded[0]['content'][0]['length']);
 
@@ -3091,9 +2957,6 @@ class File_X509
                     case 'rsaEncryption':
                         $csr['certificationRequestInfo']['subjectPKInfo']['subjectPublicKey']
                             = base64_encode("\0" . base64_decode(preg_replace('#-.+-|[\r\n]#', '', $csr['certificationRequestInfo']['subjectPKInfo']['subjectPublicKey'])));
-                        $csr['certificationRequestInfo']['subjectPKInfo']['algorithm']['parameters'] = null;
-                        $csr['signatureAlgorithm']['parameters'] = null;
-                        $csr['certificationRequestInfo']['signature']['parameters'] = null;
                 }
         }
 
@@ -3107,7 +2970,6 @@ class File_X509
 
         $asn1->loadFilters($filters);
 
-        $this->_mapOutDNs($csr, 'certificationRequestInfo/subject/rdnSequence', $asn1);
         $this->_mapOutAttributes($csr, 'certificationRequestInfo/attributes', $asn1);
         $csr = $asn1->encodeDER($csr, $this->CertificationRequest);
 
@@ -3145,7 +3007,7 @@ class File_X509
 
         $asn1 = new File_ASN1();
 
-        // OpenSSL produces SPKAC's that are preceded by the string SPKAC=
+        // OpenSSL produces SPKAC's that are preceeded by the string SPKAC=
         $temp = preg_replace('#(?:SPKAC=)|[ \r\n\\\]#', '', $spkac);
         $temp = preg_match('#^[a-zA-Z\d/+]*={0,2}$#', $temp) ? base64_decode($temp) : false;
         if ($temp != false) {
@@ -3235,7 +3097,7 @@ class File_X509
                 return $spkac;
             // case FILE_X509_FORMAT_PEM:
             default:
-                // OpenSSL's implementation of SPKAC requires the SPKAC be preceded by SPKAC= and since there are pretty much
+                // OpenSSL's implementation of SPKAC requires the SPKAC be preceeded by SPKAC= and since there are pretty much
                 // no other SPKAC decoders phpseclib will use that same format
                 return 'SPKAC=' . base64_encode($spkac);
         }
@@ -3288,19 +3150,11 @@ class File_X509
 
         $this->signatureSubject = substr($orig, $decoded[0]['content'][0]['start'], $decoded[0]['content'][0]['length']);
 
-        $this->_mapInDNs($crl, 'tbsCertList/issuer/rdnSequence', $asn1);
-        if ($this->_isSubArrayValid($crl, 'tbsCertList/crlExtensions')) {
-            $this->_mapInExtensions($crl, 'tbsCertList/crlExtensions', $asn1);
-        }
-        if ($this->_isSubArrayValid($crl, 'tbsCertList/revokedCertificates')) {
-            $rclist_ref = &$this->_subArrayUnchecked($crl, 'tbsCertList/revokedCertificates');
-            if ($rclist_ref) {
-                $rclist = $crl['tbsCertList']['revokedCertificates'];
-                foreach ($rclist as $i => $extension) {
-                    if ($this->_isSubArrayValid($rclist, "$i/crlEntryExtensions", $asn1)) {
-                        $this->_mapInExtensions($rclist_ref, "$i/crlEntryExtensions", $asn1);
-                    }
-                }
+        $this->_mapInExtensions($crl, 'tbsCertList/crlExtensions', $asn1);
+        $rclist = &$this->_subArray($crl, 'tbsCertList/revokedCertificates');
+        if (is_array($rclist)) {
+            foreach ($rclist as $i => $extension) {
+                $this->_mapInExtensions($rclist, "$i/crlEntryExtensions", $asn1);
             }
         }
 
@@ -3348,7 +3202,6 @@ class File_X509
 
         $asn1->loadFilters($filters);
 
-        $this->_mapOutDNs($crl, 'tbsCertList/issuer/rdnSequence', $asn1);
         $this->_mapOutExtensions($crl, 'tbsCertList/crlExtensions', $asn1);
         $rclist = &$this->_subArray($crl, 'tbsCertList/revokedCertificates');
         if (is_array($rclist)) {
@@ -3921,74 +3774,6 @@ class File_X509
     function makeCA()
     {
         $this->caFlag = true;
-    }
-
-    /**
-     * Check for validity of subarray
-     *
-     * This is intended for use in conjunction with _subArrayUnchecked(),
-     * implementing the checks included in _subArray() but without copying
-     * a potentially large array by passing its reference by-value to is_array().
-     *
-     * @param array $root
-     * @param string $path
-     * @return boolean
-     * @access private
-     */
-    function _isSubArrayValid($root, $path)
-    {
-        if (!is_array($root)) {
-            return false;
-        }
-
-        foreach (explode('/', $path) as $i) {
-            if (!is_array($root)) {
-                return false;
-            }
-
-            if (!isset($root[$i])) {
-                return true;
-            }
-
-            $root = $root[$i];
-        }
-
-        return true;
-    }
-
-    /**
-     * Get a reference to a subarray
-     *
-     * This variant of _subArray() does no is_array() checking,
-     * so $root should be checked with _isSubArrayValid() first.
-     *
-     * This is here for performance reasons:
-     * Passing a reference (i.e. $root) by-value (i.e. to is_array())
-     * creates a copy. If $root is an especially large array, this is expensive.
-     *
-     * @param array $root
-     * @param string $path  absolute path with / as component separator
-     * @param bool $create optional
-     * @access private
-     * @return array|false
-     */
-    function &_subArrayUnchecked(&$root, $path, $create = false)
-    {
-        $false = false;
-
-        foreach (explode('/', $path) as $i) {
-            if (!isset($root[$i])) {
-                if (!$create) {
-                    return $false;
-                }
-
-                $root[$i] = array();
-            }
-
-            $root = &$root[$i];
-        }
-
-        return $root;
     }
 
     /**

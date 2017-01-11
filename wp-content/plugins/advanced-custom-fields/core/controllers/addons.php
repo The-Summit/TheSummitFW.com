@@ -253,7 +253,7 @@ class acf_addons
 <script type="text/javascript">
 (function($) {
 	
-	$(window).on('load', function(){
+	$(window).load(function(){
 		
 		$('#add-ons .add-on-group').each(function(){
 		

@@ -21,28 +21,14 @@ abstract class UpdraftCentral_Commands {
 		$this->ud = $updraftplus;
 	}
 
-	final protected function _admin_include() {
-		$files = func_get_args();
-		foreach ($files as $file) {
-			require_once(ABSPATH.'/wp-admin/includes/'.$file);
-		}
-	}
-	
-	final protected function _frontend_include() {
-		$files = func_get_args();
-		foreach ($files as $file) {
-			require_once(ABSPATH.WPINC.'/'.$file);
-		}
-	}
-	
-	final protected function _response($data = null, $code = 'rpcok') {
+	protected function _response($data = null, $code = 'rpcok') {
 		return apply_filters('updraftplus_remotecontrol_response', array(
 			'response' => $code,
 			'data' => $data
 		), $data, $code);
 	}
 	
-	final protected function _generic_error_response($code = 'central_unspecified', $data = null) {
+	protected function _generic_error_response($code = 'central_unspecified', $data = null) {
 		return $this->_response(
 			array(
 				'code' => $code,
@@ -51,4 +37,5 @@ abstract class UpdraftCentral_Commands {
 			'rpcerror'
 		);
 	}
+	
 }

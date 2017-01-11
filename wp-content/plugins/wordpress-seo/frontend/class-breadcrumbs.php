@@ -364,11 +364,34 @@ class WPSEO_Breadcrumbs {
 				);
 			}
 			elseif ( is_404() ) {
-				$this->add_predefined_crumb(
-					$this->options['breadcrumbs-404crumb'],
-					null,
-					true
-				);
+
+				if ( 0 !== get_query_var( 'year' ) || ( 0 !== get_query_var( 'monthnum' ) || 0 !== get_query_var( 'day' ) ) ) {
+					if ( 'page' == $this->show_on_front && ! is_home() ) {
+						if ( $this->page_for_posts && $this->options['breadcrumbs-blog-remove'] === false ) {
+							$this->add_blog_crumb();
+						}
+					}
+
+					if ( 0 !== get_query_var( 'day' ) ) {
+						$this->add_linked_month_year_crumb();
+
+						$date = sprintf( '%04d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+						$this->add_date_crumb( $date );
+					}
+					elseif ( 0 !== get_query_var( 'monthnum' ) ) {
+						$this->add_month_crumb();
+					}
+					elseif ( 0 !== get_query_var( 'year' ) ) {
+						$this->add_year_crumb();
+					}
+				}
+				else {
+					$this->add_predefined_crumb(
+						$this->options['breadcrumbs-404crumb'],
+						null,
+						true
+					);
+				}
 			}
 		}
 
@@ -437,7 +460,7 @@ class WPSEO_Breadcrumbs {
 	private function add_home_crumb() {
 		$this->add_predefined_crumb(
 			$this->options['breadcrumbs-home'],
-			WPSEO_Utils::home_url(),
+			get_home_url(),
 			true
 		);
 	}
@@ -480,7 +503,7 @@ class WPSEO_Breadcrumbs {
 		if ( isset( $this->options[ 'post_types-' . $this->post->post_type . '-maintax' ] ) && $this->options[ 'post_types-' . $this->post->post_type . '-maintax' ] != '0' ) {
 			$main_tax = $this->options[ 'post_types-' . $this->post->post_type . '-maintax' ];
 			if ( isset( $this->post->ID ) ) {
-				$terms = get_the_terms( $this->post, $main_tax );
+				$terms = wp_get_object_terms( $this->post->ID, $main_tax );
 
 				if ( is_array( $terms ) && $terms !== array() ) {
 
@@ -738,7 +761,6 @@ class WPSEO_Breadcrumbs {
 	 * @param  array $link Link info array containing the keys:
 	 *                     'text'    => (string) link text
 	 *                     'url'    => (string) link url
-	 *                     (optional) 'title'         => (string) link title attribute text
 	 *                     (optional) 'allow_html'    => (bool) whether to (not) escape html in the link text
 	 *                     This prevents html stripping from the text strings set in the
 	 *                     WPSEO -> Internal Links options page.
@@ -770,8 +792,7 @@ class WPSEO_Breadcrumbs {
 				else {
 					$link_output .= '<' . $this->element . ' rel="v:child" typeof="v:Breadcrumb">';
 				}
-				$title_attr   = isset( $link['title'] ) ? ' title="' . esc_attr( $link['title'] ) . '"' : '';
-				$link_output .= '<a href="' . esc_url( $link['url'] ) . '" rel="v:url" property="v:title"' . $title_attr . '>' . $link['text'] . '</a>';
+				$link_output .= '<a href="' . esc_url( $link['url'] ) . '" rel="v:url" property="v:title">' . $link['text'] . '</a>';
 			}
 			else {
 				$link_output .= '<' . $inner_elm . ' class="breadcrumb_last">' . $link['text'] . '</' . $inner_elm . '>';
@@ -886,4 +907,6 @@ class WPSEO_Breadcrumbs {
 	public function create_breadcrumbs_string( $links, $wrapper = 'span', $element = 'span' ) {
 		_deprecated_function( __METHOD__, 'WPSEO 1.5.2.3', 'yoast_breadcrumbs' );
 	}
-}
+
+
+} /* End of class */

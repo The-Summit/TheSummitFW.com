@@ -19,7 +19,7 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @link       https://nextgenthemes.com
+ * @link       http://nico.onl
  * @since      1.0.0
  *
  * @package    Advanced_Responsive_Video_Embedder

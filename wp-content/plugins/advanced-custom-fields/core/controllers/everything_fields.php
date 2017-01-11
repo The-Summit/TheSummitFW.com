@@ -848,30 +848,14 @@ $(document).ready(function(){
 	*  @created: 12/01/13
 	*/
 	
-	function delete_term( $term, $tt_id, $taxonomy, $deleted_term ) {
-		
-		// globals
+	function delete_term( $term, $tt_id, $taxonomy, $deleted_term )
+	{
 		global $wpdb;
 		
-		
-		// vars
-		$search = $taxonomy . '_' . $term . '_%';
-		$_search = '_' . $search;
-		
-		
-		// escape '_'
-		// http://stackoverflow.com/questions/2300285/how-do-i-escape-in-sql-server
-		$search = str_replace('_', '\_', $search);
-		$_search = str_replace('_', '\_', $_search);
-		
-		
-		// delete
-		$result = $wpdb->query($wpdb->prepare(
-			"DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
-			$search,
-			$_search 
+		$values = $wpdb->query($wpdb->prepare(
+			"DELETE FROM $wpdb->options WHERE option_name LIKE %s",
+			'%' . $taxonomy . '_' . $term . '%'
 		));
-		
 	}
 	
 			

@@ -161,20 +161,9 @@ class Crypt_RC4 extends Crypt_Base
      * @return Crypt_RC4
      * @access public
      */
-    function __construct()
-    {
-        parent::__construct(CRYPT_MODE_STREAM);
-    }
-
-    /**
-     * PHP4 compatible Default Constructor.
-     *
-     * @see self::__construct()
-     * @access public
-     */
     function Crypt_RC4()
     {
-        $this->__construct();
+        parent::Crypt_Base(CRYPT_MODE_STREAM);
     }
 
     /**
@@ -245,7 +234,7 @@ class Crypt_RC4 extends Crypt_Base
         if ($length < 8) {
             $this->key_length = 1;
         } elseif ($length > 2048) {
-            $this->key_length = 256;
+            $this->key_length = 248;
         } else {
             $this->key_length = $length >> 3;
         }

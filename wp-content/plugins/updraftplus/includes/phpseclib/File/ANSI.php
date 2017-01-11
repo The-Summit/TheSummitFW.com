@@ -179,7 +179,7 @@ class File_ANSI
      * @return File_ANSI
      * @access public
      */
-    function __construct()
+    function File_ANSI()
     {
         $attr_cell = new stdClass();
         $attr_cell->bold = false;
@@ -193,17 +193,6 @@ class File_ANSI
 
         $this->setHistory(200);
         $this->setDimensions(80, 24);
-    }
-
-    /**
-     * PHP4 compatible Default Constructor.
-     *
-     * @see self::__construct()
-     * @access public
-     */
-    function File_ANSI()
-    {
-        $this->__construct($mode);
     }
 
     /**

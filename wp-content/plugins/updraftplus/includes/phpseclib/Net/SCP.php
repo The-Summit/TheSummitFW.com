@@ -116,11 +116,13 @@ class Net_SCP
      *
      * Connects to an SSH server
      *
-     * @param Net_SSH1|Net_SSH2 $ssh
+     * @param string $host
+     * @param int $port
+     * @param int $timeout
      * @return Net_SCP
      * @access public
      */
-    function __construct($ssh)
+    function Net_SCP($ssh)
     {
         if (!is_object($ssh)) {
             return;
@@ -139,18 +141,6 @@ class Net_SCP
         }
 
         $this->ssh = $ssh;
-    }
-
-    /**
-     * PHP4 compatible Default Constructor.
-     *
-     * @see self::__construct()
-     * @param Net_SSH1|Net_SSH2 $ssh
-     * @access public
-     */
-    function Net_SCP($ssh)
-    {
-        $this->__construct($ssh);
     }
 
     /**

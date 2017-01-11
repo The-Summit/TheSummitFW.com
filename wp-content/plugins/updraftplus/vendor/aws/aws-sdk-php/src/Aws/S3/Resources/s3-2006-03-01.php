@@ -99,7 +99,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -109,11 +108,6 @@ return array (
                     'type' => 'string',
                     'location' => 'query',
                     'sentAs' => 'uploadId',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
             ),
             'errorResponses' => array(
@@ -148,7 +142,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -178,11 +171,6 @@ return array (
                     'type' => 'string',
                     'location' => 'query',
                     'sentAs' => 'uploadId',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'command.expects' => array(
                     'static' => true,
@@ -310,7 +298,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -377,11 +364,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-copy-source-server-side-encryption-customer-key-MD5',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'ACP' => array(
                     'type' => 'object',
@@ -550,7 +532,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -597,11 +578,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'ACP' => array(
                     'type' => 'object',
@@ -673,20 +649,6 @@ return array (
                 ),
             ),
         ),
-        'DeleteBucketReplication' => array(
-            'httpMethod' => 'DELETE',
-            'uri' => '/{Bucket}?replication',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'DeleteBucketReplicationOutput',
-            'responseType' => 'model',
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-            ),
-        ),
         'DeleteBucketTagging' => array(
             'httpMethod' => 'DELETE',
             'uri' => '/{Bucket}?tagging',
@@ -734,7 +696,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -748,11 +709,6 @@ return array (
                     'type' => 'string',
                     'location' => 'query',
                     'sentAs' => 'versionId',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
             ),
         ),
@@ -793,7 +749,6 @@ return array (
                             'Key' => array(
                                 'required' => true,
                                 'type' => 'string',
-                                'minLength' => 1,
                             ),
                             'VersionId' => array(
                                 'type' => 'string',
@@ -810,11 +765,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-mfa',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'command.expects' => array(
                     'static' => true,
@@ -879,24 +829,6 @@ return array (
                 ),
             ),
         ),
-        'GetBucketLifecycleConfiguration' => array(
-            'httpMethod' => 'GET',
-            'uri' => '/{Bucket}?lifecycle',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'GetBucketLifecycleConfigurationOutput',
-            'responseType' => 'model',
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-                'command.expects' => array(
-                    'static' => true,
-                    'default' => 'application/xml',
-                ),
-            ),
-        ),
         'GetBucketLocation' => array(
             'httpMethod' => 'GET',
             'uri' => '/{Bucket}?location',
@@ -935,27 +867,9 @@ return array (
             'httpMethod' => 'GET',
             'uri' => '/{Bucket}?notification',
             'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'NotificationConfigurationDeprecated',
+            'responseClass' => 'GetBucketNotificationOutput',
             'responseType' => 'model',
             'documentationUrl' => 'http://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketGETnotification.html',
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-                'command.expects' => array(
-                    'static' => true,
-                    'default' => 'application/xml',
-                ),
-            ),
-        ),
-        'GetBucketNotificationConfiguration' => array(
-            'httpMethod' => 'GET',
-            'uri' => '/{Bucket}?notification',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'NotificationConfiguration',
-            'responseType' => 'model',
             'parameters' => array(
                 'Bucket' => array(
                     'required' => true,
@@ -980,24 +894,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                ),
-            ),
-        ),
-        'GetBucketReplication' => array(
-            'httpMethod' => 'GET',
-            'uri' => '/{Bucket}?replication',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'GetBucketReplicationOutput',
-            'responseType' => 'model',
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-                'command.expects' => array(
-                    'static' => true,
-                    'default' => 'application/xml',
                 ),
             ),
         ),
@@ -1124,7 +1020,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -1188,11 +1083,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-customer-key-MD5',
                 ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
-                ),
                 'SaveAs' => array(
                     'location' => 'response_body',
                 ),
@@ -1221,7 +1111,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -1230,11 +1119,6 @@ return array (
                     'type' => 'string',
                     'location' => 'query',
                     'sentAs' => 'versionId',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'command.expects' => array(
                     'static' => true,
@@ -1265,15 +1149,9 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
             ),
         ),
@@ -1345,7 +1223,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -1373,11 +1250,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-customer-key-MD5',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
             ),
             'errorResponses' => array(
@@ -1566,7 +1438,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -1586,11 +1457,6 @@ return array (
                     'type' => 'string',
                     'location' => 'query',
                     'sentAs' => 'uploadId',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'command.expects' => array(
                     'static' => true,
@@ -1730,7 +1596,6 @@ return array (
                     'location' => 'uri',
                 ),
                 'CORSRules' => array(
-                    'required' => true,
                     'type' => 'array',
                     'location' => 'xml',
                     'data' => array(
@@ -1753,7 +1618,6 @@ return array (
                                 ),
                             ),
                             'AllowedMethods' => array(
-                                'required' => true,
                                 'type' => 'array',
                                 'data' => array(
                                     'xmlFlattened' => true,
@@ -1765,7 +1629,6 @@ return array (
                                 ),
                             ),
                             'AllowedOrigins' => array(
-                                'required' => true,
                                 'type' => 'array',
                                 'data' => array(
                                     'xmlFlattened' => true,
@@ -1899,124 +1762,6 @@ return array (
                 ),
             ),
         ),
-        'PutBucketLifecycleConfiguration' => array(
-            'httpMethod' => 'PUT',
-            'uri' => '/{Bucket}?lifecycle',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'PutBucketLifecycleConfigurationOutput',
-            'responseType' => 'model',
-            'data' => array(
-                'xmlRoot' => array(
-                    'name' => 'LifecycleConfiguration',
-                    'namespaces' => array(
-                        'http://s3.amazonaws.com/doc/2006-03-01/',
-                    ),
-                ),
-            ),
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-                'Rules' => array(
-                    'required' => true,
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'LifecycleRule',
-                        'type' => 'object',
-                        'sentAs' => 'Rule',
-                        'properties' => array(
-                            'Expiration' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Date' => array(
-                                        'type' => array(
-                                            'object',
-                                            'string',
-                                            'integer',
-                                        ),
-                                        'format' => 'date-time-http',
-                                    ),
-                                    'Days' => array(
-                                        'type' => 'numeric',
-                                    ),
-                                ),
-                            ),
-                            'ID' => array(
-                                'type' => 'string',
-                            ),
-                            'Prefix' => array(
-                                'required' => true,
-                                'type' => 'string',
-                            ),
-                            'Status' => array(
-                                'required' => true,
-                                'type' => 'string',
-                            ),
-                            'Transitions' => array(
-                                'type' => 'array',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Transition',
-                                    'type' => 'object',
-                                    'sentAs' => 'Transition',
-                                    'properties' => array(
-                                        'Date' => array(
-                                            'type' => array(
-                                                'object',
-                                                'string',
-                                                'integer',
-                                            ),
-                                            'format' => 'date-time-http',
-                                        ),
-                                        'Days' => array(
-                                            'type' => 'numeric',
-                                        ),
-                                        'StorageClass' => array(
-                                            'type' => 'string',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            'NoncurrentVersionTransitions' => array(
-                                'type' => 'array',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'NoncurrentVersionTransition',
-                                    'type' => 'object',
-                                    'sentAs' => 'NoncurrentVersionTransition',
-                                    'properties' => array(
-                                        'NoncurrentDays' => array(
-                                            'type' => 'numeric',
-                                        ),
-                                        'StorageClass' => array(
-                                            'type' => 'string',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            'NoncurrentVersionExpiration' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'NoncurrentDays' => array(
-                                        'type' => 'numeric',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
         'PutBucketLogging' => array(
             'httpMethod' => 'PUT',
             'uri' => '/{Bucket}?logging',
@@ -2105,7 +1850,6 @@ return array (
                         'http://s3.amazonaws.com/doc/2006-03-01/',
                     ),
                 ),
-                'xmlAllowEmpty' => true,
             ),
             'parameters' => array(
                 'Bucket' => array(
@@ -2193,220 +1937,6 @@ return array (
                 ),
             ),
         ),
-        'PutBucketNotificationConfiguration' => array(
-            'httpMethod' => 'PUT',
-            'uri' => '/{Bucket}?notification',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'PutBucketNotificationConfigurationOutput',
-            'responseType' => 'model',
-            'data' => array(
-                'xmlRoot' => array(
-                    'name' => 'NotificationConfiguration',
-                    'namespaces' => array(
-                        'http://s3.amazonaws.com/doc/2006-03-01/',
-                    ),
-                ),
-            ),
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-                'TopicConfigurations' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'TopicConfiguration',
-                        'type' => 'object',
-                        'sentAs' => 'TopicConfiguration',
-                        'properties' => array(
-                            'Id' => array(
-                                'type' => 'string',
-                            ),
-                            'TopicArn' => array(
-                                'required' => true,
-                                'type' => 'string',
-                                'sentAs' => 'Topic',
-                            ),
-                            'Events' => array(
-                                'required' => true,
-                                'type' => 'array',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Event',
-                                    'type' => 'string',
-                                    'sentAs' => 'Event',
-                                ),
-                            ),
-                            'Filter' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Key' => array(
-                                        'type' => 'object',
-                                        'sentAs' => 'S3Key',
-                                        'properties' => array(
-                                            'FilterRules' => array(
-                                                'type' => 'array',
-                                                'data' => array(
-                                                    'xmlFlattened' => true,
-                                                ),
-                                                'items' => array(
-                                                    'name' => 'FilterRule',
-                                                    'type' => 'object',
-                                                    'sentAs' => 'FilterRule',
-                                                    'properties' => array(
-                                                        'Name' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                        'Value' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'QueueConfigurations' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'QueueConfiguration',
-                        'type' => 'object',
-                        'sentAs' => 'QueueConfiguration',
-                        'properties' => array(
-                            'Id' => array(
-                                'type' => 'string',
-                            ),
-                            'QueueArn' => array(
-                                'required' => true,
-                                'type' => 'string',
-                                'sentAs' => 'Queue',
-                            ),
-                            'Events' => array(
-                                'required' => true,
-                                'type' => 'array',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Event',
-                                    'type' => 'string',
-                                    'sentAs' => 'Event',
-                                ),
-                            ),
-                            'Filter' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Key' => array(
-                                        'type' => 'object',
-                                        'sentAs' => 'S3Key',
-                                        'properties' => array(
-                                            'FilterRules' => array(
-                                                'type' => 'array',
-                                                'data' => array(
-                                                    'xmlFlattened' => true,
-                                                ),
-                                                'items' => array(
-                                                    'name' => 'FilterRule',
-                                                    'type' => 'object',
-                                                    'sentAs' => 'FilterRule',
-                                                    'properties' => array(
-                                                        'Name' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                        'Value' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'LambdaFunctionConfigurations' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'LambdaFunctionConfiguration',
-                        'type' => 'object',
-                        'sentAs' => 'CloudFunctionConfiguration',
-                        'properties' => array(
-                            'Id' => array(
-                                'type' => 'string',
-                            ),
-                            'LambdaFunctionArn' => array(
-                                'required' => true,
-                                'type' => 'string',
-                                'sentAs' => 'CloudFunction',
-                            ),
-                            'Events' => array(
-                                'required' => true,
-                                'type' => 'array',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Event',
-                                    'type' => 'string',
-                                    'sentAs' => 'Event',
-                                ),
-                            ),
-                            'Filter' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Key' => array(
-                                        'type' => 'object',
-                                        'sentAs' => 'S3Key',
-                                        'properties' => array(
-                                            'FilterRules' => array(
-                                                'type' => 'array',
-                                                'data' => array(
-                                                    'xmlFlattened' => true,
-                                                ),
-                                                'items' => array(
-                                                    'name' => 'FilterRule',
-                                                    'type' => 'object',
-                                                    'sentAs' => 'FilterRule',
-                                                    'properties' => array(
-                                                        'Name' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                        'Value' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
         'PutBucketPolicy' => array(
             'httpMethod' => 'PUT',
             'uri' => '/{Bucket}?policy',
@@ -2435,72 +1965,6 @@ return array (
                         'object',
                     ),
                     'location' => 'body',
-                ),
-            ),
-        ),
-        'PutBucketReplication' => array(
-            'httpMethod' => 'PUT',
-            'uri' => '/{Bucket}?replication',
-            'class' => 'Aws\\S3\\Command\\S3Command',
-            'responseClass' => 'PutBucketReplicationOutput',
-            'responseType' => 'model',
-            'data' => array(
-                'xmlRoot' => array(
-                    'name' => 'ReplicationConfiguration',
-                    'namespaces' => array(
-                        'http://s3.amazonaws.com/doc/2006-03-01/',
-                    ),
-                ),
-            ),
-            'parameters' => array(
-                'Bucket' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'uri',
-                ),
-                'Role' => array(
-                    'required' => true,
-                    'type' => 'string',
-                    'location' => 'xml',
-                ),
-                'Rules' => array(
-                    'required' => true,
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'ReplicationRule',
-                        'type' => 'object',
-                        'sentAs' => 'Rule',
-                        'properties' => array(
-                            'ID' => array(
-                                'type' => 'string',
-                            ),
-                            'Prefix' => array(
-                                'required' => true,
-                                'type' => 'string',
-                            ),
-                            'Status' => array(
-                                'required' => true,
-                                'type' => 'string',
-                            ),
-                            'Destination' => array(
-                                'required' => true,
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Bucket' => array(
-                                        'required' => true,
-                                        'type' => 'string',
-                                    ),
-                                    'StorageClass' => array(
-                                        'type' => 'string',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
                 ),
             ),
         ),
@@ -2565,7 +2029,6 @@ return array (
                             'Key' => array(
                                 'required' => true,
                                 'type' => 'string',
-                                'minLength' => 1,
                             ),
                             'Value' => array(
                                 'required' => true,
@@ -2642,7 +2105,6 @@ return array (
                         'Key' => array(
                             'required' => true,
                             'type' => 'string',
-                            'minLength' => 1,
                         ),
                     ),
                 ),
@@ -2817,7 +2279,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -2864,11 +2325,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'ACP' => array(
                     'type' => 'object',
@@ -2983,15 +2439,9 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
                 'ACP' => array(
                     'type' => 'object',
@@ -3030,7 +2480,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -3044,11 +2493,6 @@ return array (
                     'required' => true,
                     'type' => 'numeric',
                     'location' => 'xml',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
             ),
             'errorResponses' => array(
@@ -3103,7 +2547,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -3120,11 +2563,6 @@ return array (
                     'location' => 'query',
                     'sentAs' => 'uploadId',
                 ),
-                'ServerSideEncryption' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-server-side-encryption',
-                ),
                 'SSECustomerAlgorithm' => array(
                     'type' => 'string',
                     'location' => 'header',
@@ -3139,11 +2577,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-customer-key-MD5',
-                ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
                 ),
             ),
         ),
@@ -3213,7 +2646,6 @@ return array (
                     'required' => true,
                     'type' => 'string',
                     'location' => 'uri',
-                    'minLength' => 1,
                     'filters' => array(
                         'Aws\\S3\\S3Client::explodeKey',
                     ),
@@ -3260,11 +2692,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'x-amz-copy-source-server-side-encryption-customer-key-MD5',
                 ),
-                'RequestPayer' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-payer',
-                ),
                 'command.expects' => array(
                     'static' => true,
                     'default' => 'application/xml',
@@ -3277,11 +2704,6 @@ return array (
             'type' => 'object',
             'additionalProperties' => true,
             'properties' => array(
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -3328,11 +2750,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
                 ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -3361,11 +2778,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'x-amz-copy-source-version-id',
                 ),
-                'VersionId' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-version-id',
-                ),
                 'ServerSideEncryption' => array(
                     'type' => 'string',
                     'location' => 'header',
@@ -3385,11 +2797,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -3448,11 +2855,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
                 ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -3499,16 +2901,6 @@ return array (
                 ),
             ),
         ),
-        'DeleteBucketReplicationOutput' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
         'DeleteBucketTaggingOutput' => array(
             'type' => 'object',
             'additionalProperties' => true,
@@ -3542,11 +2934,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-version-id',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -3582,11 +2969,6 @@ return array (
                             ),
                         ),
                     ),
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
                 ),
                 'Errors' => array(
                     'type' => 'array',
@@ -3837,102 +3219,6 @@ return array (
                 ),
             ),
         ),
-        'GetBucketLifecycleConfigurationOutput' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'Rules' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'sentAs' => 'Rule',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'LifecycleRule',
-                        'type' => 'object',
-                        'sentAs' => 'Rule',
-                        'properties' => array(
-                            'Expiration' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Date' => array(
-                                        'type' => 'string',
-                                    ),
-                                    'Days' => array(
-                                        'type' => 'numeric',
-                                    ),
-                                ),
-                            ),
-                            'ID' => array(
-                                'type' => 'string',
-                            ),
-                            'Prefix' => array(
-                                'type' => 'string',
-                            ),
-                            'Status' => array(
-                                'type' => 'string',
-                            ),
-                            'Transitions' => array(
-                                'type' => 'array',
-                                'sentAs' => 'Transition',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Transition',
-                                    'type' => 'object',
-                                    'sentAs' => 'Transition',
-                                    'properties' => array(
-                                        'Date' => array(
-                                            'type' => 'string',
-                                        ),
-                                        'Days' => array(
-                                            'type' => 'numeric',
-                                        ),
-                                        'StorageClass' => array(
-                                            'type' => 'string',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            'NoncurrentVersionTransitions' => array(
-                                'type' => 'array',
-                                'sentAs' => 'NoncurrentVersionTransition',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'NoncurrentVersionTransition',
-                                    'type' => 'object',
-                                    'sentAs' => 'NoncurrentVersionTransition',
-                                    'properties' => array(
-                                        'NoncurrentDays' => array(
-                                            'type' => 'numeric',
-                                        ),
-                                        'StorageClass' => array(
-                                            'type' => 'string',
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            'NoncurrentVersionExpiration' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'NoncurrentDays' => array(
-                                        'type' => 'numeric',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
         'GetBucketLocationOutput' => array(
             'type' => 'object',
             'additionalProperties' => true,
@@ -4008,7 +3294,7 @@ return array (
                 ),
             ),
         ),
-        'NotificationConfigurationDeprecated' => array(
+        'GetBucketNotificationOutput' => array(
             'type' => 'object',
             'additionalProperties' => true,
             'properties' => array(
@@ -4102,211 +3388,6 @@ return array (
                 ),
             ),
         ),
-        'NotificationConfiguration' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'TopicConfigurations' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'sentAs' => 'TopicConfiguration',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'TopicConfiguration',
-                        'type' => 'object',
-                        'sentAs' => 'TopicConfiguration',
-                        'properties' => array(
-                            'Id' => array(
-                                'type' => 'string',
-                            ),
-                            'TopicArn' => array(
-                                'type' => 'string',
-                                'sentAs' => 'Topic',
-                            ),
-                            'Events' => array(
-                                'type' => 'array',
-                                'sentAs' => 'Event',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Event',
-                                    'type' => 'string',
-                                    'sentAs' => 'Event',
-                                ),
-                            ),
-                            'Filter' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Key' => array(
-                                        'type' => 'object',
-                                        'sentAs' => 'S3Key',
-                                        'properties' => array(
-                                            'FilterRules' => array(
-                                                'type' => 'array',
-                                                'sentAs' => 'FilterRule',
-                                                'data' => array(
-                                                    'xmlFlattened' => true,
-                                                ),
-                                                'items' => array(
-                                                    'name' => 'FilterRule',
-                                                    'type' => 'object',
-                                                    'sentAs' => 'FilterRule',
-                                                    'properties' => array(
-                                                        'Name' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                        'Value' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'QueueConfigurations' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'sentAs' => 'QueueConfiguration',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'QueueConfiguration',
-                        'type' => 'object',
-                        'sentAs' => 'QueueConfiguration',
-                        'properties' => array(
-                            'Id' => array(
-                                'type' => 'string',
-                            ),
-                            'QueueArn' => array(
-                                'type' => 'string',
-                                'sentAs' => 'Queue',
-                            ),
-                            'Events' => array(
-                                'type' => 'array',
-                                'sentAs' => 'Event',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Event',
-                                    'type' => 'string',
-                                    'sentAs' => 'Event',
-                                ),
-                            ),
-                            'Filter' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Key' => array(
-                                        'type' => 'object',
-                                        'sentAs' => 'S3Key',
-                                        'properties' => array(
-                                            'FilterRules' => array(
-                                                'type' => 'array',
-                                                'sentAs' => 'FilterRule',
-                                                'data' => array(
-                                                    'xmlFlattened' => true,
-                                                ),
-                                                'items' => array(
-                                                    'name' => 'FilterRule',
-                                                    'type' => 'object',
-                                                    'sentAs' => 'FilterRule',
-                                                    'properties' => array(
-                                                        'Name' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                        'Value' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'LambdaFunctionConfigurations' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'sentAs' => 'CloudFunctionConfiguration',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'LambdaFunctionConfiguration',
-                        'type' => 'object',
-                        'sentAs' => 'CloudFunctionConfiguration',
-                        'properties' => array(
-                            'Id' => array(
-                                'type' => 'string',
-                            ),
-                            'LambdaFunctionArn' => array(
-                                'type' => 'string',
-                                'sentAs' => 'CloudFunction',
-                            ),
-                            'Events' => array(
-                                'type' => 'array',
-                                'sentAs' => 'Event',
-                                'data' => array(
-                                    'xmlFlattened' => true,
-                                ),
-                                'items' => array(
-                                    'name' => 'Event',
-                                    'type' => 'string',
-                                    'sentAs' => 'Event',
-                                ),
-                            ),
-                            'Filter' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Key' => array(
-                                        'type' => 'object',
-                                        'sentAs' => 'S3Key',
-                                        'properties' => array(
-                                            'FilterRules' => array(
-                                                'type' => 'array',
-                                                'sentAs' => 'FilterRule',
-                                                'data' => array(
-                                                    'xmlFlattened' => true,
-                                                ),
-                                                'items' => array(
-                                                    'name' => 'FilterRule',
-                                                    'type' => 'object',
-                                                    'sentAs' => 'FilterRule',
-                                                    'properties' => array(
-                                                        'Name' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                        'Value' => array(
-                                                            'type' => 'string',
-                                                        ),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
         'GetBucketPolicyOutput' => array(
             'type' => 'object',
             'additionalProperties' => true,
@@ -4315,55 +3396,6 @@ return array (
                     'type' => 'string',
                     'instanceOf' => 'Guzzle\\Http\\EntityBody',
                     'location' => 'body',
-                ),
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
-        'GetBucketReplicationOutput' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'Role' => array(
-                    'type' => 'string',
-                    'location' => 'xml',
-                ),
-                'Rules' => array(
-                    'type' => 'array',
-                    'location' => 'xml',
-                    'sentAs' => 'Rule',
-                    'data' => array(
-                        'xmlFlattened' => true,
-                    ),
-                    'items' => array(
-                        'name' => 'ReplicationRule',
-                        'type' => 'object',
-                        'sentAs' => 'Rule',
-                        'properties' => array(
-                            'ID' => array(
-                                'type' => 'string',
-                            ),
-                            'Prefix' => array(
-                                'type' => 'string',
-                            ),
-                            'Status' => array(
-                                'type' => 'string',
-                            ),
-                            'Destination' => array(
-                                'type' => 'object',
-                                'properties' => array(
-                                    'Bucket' => array(
-                                        'type' => 'string',
-                                    ),
-                                    'StorageClass' => array(
-                                        'type' => 'string',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -4586,11 +3618,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'Content-Language',
                 ),
-                'ContentRange' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'Content-Range',
-                ),
                 'ContentType' => array(
                     'type' => 'string',
                     'location' => 'header',
@@ -4632,21 +3659,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'StorageClass' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-storage-class',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
-                'ReplicationStatus' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-replication-status',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -4710,11 +3722,6 @@ return array (
                         ),
                     ),
                 ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -4729,11 +3736,6 @@ return array (
                     'type' => 'string',
                     'instanceOf' => 'Guzzle\\Http\\EntityBody',
                     'location' => 'body',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -4860,21 +3862,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'StorageClass' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-storage-class',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
-                'ReplicationStatus' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-replication-status',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -5371,11 +4358,6 @@ return array (
                     'type' => 'string',
                     'location' => 'xml',
                 ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -5412,16 +4394,6 @@ return array (
                 ),
             ),
         ),
-        'PutBucketLifecycleConfigurationOutput' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
         'PutBucketLoggingOutput' => array(
             'type' => 'object',
             'additionalProperties' => true,
@@ -5442,27 +4414,7 @@ return array (
                 ),
             ),
         ),
-        'PutBucketNotificationConfigurationOutput' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
         'PutBucketPolicyOutput' => array(
-            'type' => 'object',
-            'additionalProperties' => true,
-            'properties' => array(
-                'RequestId' => array(
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-id',
-                ),
-            ),
-        ),
-        'PutBucketReplicationOutput' => array(
             'type' => 'object',
             'additionalProperties' => true,
             'properties' => array(
@@ -5550,11 +4502,6 @@ return array (
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
                 ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -5567,11 +4514,6 @@ return array (
             'type' => 'object',
             'additionalProperties' => true,
             'properties' => array(
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -5582,11 +4524,6 @@ return array (
             'type' => 'object',
             'additionalProperties' => true,
             'properties' => array(
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
-                ),
                 'RequestId' => array(
                     'location' => 'header',
                     'sentAs' => 'x-amz-request-id',
@@ -5620,11 +4557,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -5668,11 +4600,6 @@ return array (
                     'type' => 'string',
                     'location' => 'header',
                     'sentAs' => 'x-amz-server-side-encryption-aws-kms-key-id',
-                ),
-                'RequestCharged' => array(
-                    'type' => 'string',
-                    'location' => 'header',
-                    'sentAs' => 'x-amz-request-charged',
                 ),
                 'RequestId' => array(
                     'location' => 'header',
@@ -5759,11 +4686,6 @@ return array (
             'ignore_errors' => array(
                 'NoSuchKey',
             ),
-        ),
-        'ObjectNotExists' => array(
-            'operation' => 'HeadObject',
-            'success.type' => 'error',
-            'success.value' => 'NoSuchKey'
         ),
     ),
 );

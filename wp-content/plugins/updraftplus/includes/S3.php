@@ -776,7 +776,7 @@ class UpdraftPlus_S3
 	* @param string $bucket Bucket name
 	* @param string $uri Object URI
 	* @param mixed $saveTo Filename or resource to write to
-	* @param mixed $resume - if $saveTo is a resource, then this is either false or the value for a Range: header; otherwise, a boolean, indicating whether to resume if possible.
+	* @param boolean resume, if possible
 	* @return mixed
 	*/
 	public static function getObject($bucket, $uri, $saveTo = false, $resume = false)
@@ -784,10 +784,9 @@ class UpdraftPlus_S3
 		$rest = new UpdraftPlus_S3Request('GET', $bucket, $uri, self::$endpoint, self::$use_dns_bucket_name);
 		if ($saveTo !== false)
 		{
-			if (is_resource($saveTo)) {
+			if (is_resource($saveTo))
 				$rest->fp = $saveTo;
-				if (!is_bool($resume)) $rest->setHeader('Range', $resume);
-			} else {
+			else
 				if ($resume && file_exists($saveTo)) {
 					if (($rest->fp = @fopen($saveTo, 'ab')) !== false) {
 						$rest->setHeader('Range', "bytes=".filesize($saveTo).'-');
@@ -801,7 +800,6 @@ class UpdraftPlus_S3
 					else
 						$rest->response->error = array('code' => 0, 'message' => 'Unable to open save file for writing: '.$saveTo);
 				}
-			}
 		}
 		if ($rest->response->error === false) $rest->getResponse();
 

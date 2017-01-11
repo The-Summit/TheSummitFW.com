@@ -16,7 +16,6 @@
 
 namespace Aws\Common\Signature;
 
-use Aws\Common\Credentials\AbstractRefreshableCredentials;
 use Aws\Common\Credentials\CredentialsInterface;
 use Aws\Common\Credentials\NullCredentials;
 use Guzzle\Common\Event;
@@ -77,12 +76,8 @@ class SignatureListener implements EventSubscriberInterface
      */
     public function onRequestBeforeSend(Event $event)
     {
-        $creds = $this->credentials instanceof AbstractRefreshableCredentials
-            ? $this->credentials->getCredentials()
-            : $this->credentials;
-
-        if(!$creds instanceof NullCredentials) {
-            $this->signature->signRequest($event['request'], $creds);
+        if(!$this->credentials instanceof NullCredentials) {
+            $this->signature->signRequest($event['request'], $this->credentials);
         }
     }
 }

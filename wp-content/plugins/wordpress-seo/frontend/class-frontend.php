@@ -115,9 +115,25 @@ class WPSEO_Frontend {
 		// Fix the WooThemes woo_title() output.
 		add_filter( 'woo_title', array( $this, 'fix_woo_title' ), 99 );
 
-		if ( $this->options['disable-date'] === true ||
-		     $this->options['disable-author'] === true ||
-		     $this->options['disable-post_format'] === true
+		if ( $this->options['hide-rsdlink'] === true ) {
+			remove_action( 'wp_head', 'rsd_link' );
+		}
+		if ( $this->options['hide-wlwmanifest'] === true ) {
+			remove_action( 'wp_head', 'wlwmanifest_link' );
+		}
+		if ( $this->options['hide-shortlink'] === true ) {
+			remove_action( 'wp_head', 'wp_shortlink_wp_head' );
+			remove_action( 'template_redirect', 'wp_shortlink_header', 11 );
+		}
+		if ( $this->options['hide-feedlinks'] === true ) {
+			// @todo: add option to display just normal feed and hide comment feed.
+			remove_action( 'wp_head', 'feed_links', 2 );
+			remove_action( 'wp_head', 'feed_links_extra', 3 );
+		}
+
+		if ( ( $this->options['disable-date'] === true ||
+		       $this->options['disable-author'] === true ) ||
+		     ( isset( $this->options['disable-post_formats'] ) && $this->options['disable-post_formats'] )
 		) {
 			add_action( 'wp', array( $this, 'archive_redirect' ) );
 		}
@@ -248,19 +264,15 @@ class WPSEO_Frontend {
 			$object = $GLOBALS['wp_query']->get_queried_object();
 		}
 
-		if ( is_object( $object ) ) {
-			$title = WPSEO_Meta::get_value( 'title', $object->ID );
+		$title = WPSEO_Meta::get_value( 'title', $object->ID );
 
-			if ( $title !== '' ) {
-				return wpseo_replace_vars( $title, $object );
-			}
-
-			$post_type = ( isset( $object->post_type ) ? $object->post_type : $object->query_var );
-
-			return $this->get_title_from_options( 'title-' . $post_type, $object );
+		if ( $title !== '' ) {
+			return wpseo_replace_vars( $title, $object );
 		}
 
-		return $this->get_title_from_options( 'title-404-wpseo' );
+		$post_type = ( isset( $object->post_type ) ? $object->post_type : $object->query_var );
+
+		return $this->get_title_from_options( 'title-' . $post_type, $object );
 	}
 
 	/**
@@ -540,13 +552,33 @@ class WPSEO_Frontend {
 		}
 		elseif ( is_404() ) {
 
-			$title = $this->get_title_from_options( 'title-404-wpseo' );
+			if ( 0 !== get_query_var( 'year' ) || ( 0 !== get_query_var( 'monthnum' ) || 0 !== get_query_var( 'day' ) ) ) {
+				// @todo [JRF => Yoast] Should these not use the archive default if no title found ?
+				if ( 0 !== get_query_var( 'day' ) ) {
+					$date       = sprintf( '%04d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+					$date       = mysql2date( get_option( 'date_format' ), $date, true );
+					$date       = apply_filters( 'get_the_date', $date, '' );
+					$title_part = sprintf( __( '%s Archives', 'wordpress-seo' ), $date );
+				}
+				elseif ( 0 !== get_query_var( 'monthnum' ) ) {
+					$title_part = sprintf( __( '%s Archives', 'wordpress-seo' ), single_month_title( ' ', false ) );
+				}
+				elseif ( 0 !== get_query_var( 'year' ) ) {
+					$title_part = sprintf( __( '%s Archives', 'wordpress-seo' ), get_query_var( 'year' ) );
+				}
+				else {
+					$title_part = __( 'Archives', 'wordpress-seo' );
+				}
+			}
+			else {
+				$title = $this->get_title_from_options( 'title-404-wpseo' );
 
-			// @todo [JRF => Yoast] Should these not use the 404 default if no title found ?
-			// WPSEO_Options::get_default( 'wpseo_titles', 'title-404-wpseo' )
-			// Replacement would be needed!
-			if ( empty( $title ) ) {
-				$title_part = __( 'Page not found', 'wordpress-seo' );
+				// @todo [JRF => Yoast] Should these not use the 404 default if no title found ?
+				// WPSEO_Options::get_default( 'wpseo_titles', 'title-404-wpseo' )
+				// Replacement would be needed!
+				if ( empty( $title ) ) {
+					$title_part = __( 'Page not found', 'wordpress-seo' );
+				}
 			}
 		}
 		else {
@@ -630,6 +662,11 @@ class WPSEO_Frontend {
 	 * Output Webmaster Tools authentication strings
 	 */
 	public function webmaster_tools_authentication() {
+		// Alexa.
+		if ( $this->options['alexaverify'] !== '' ) {
+			echo '<meta name="alexaVerifyID" content="' . esc_attr( $this->options['alexaverify'] ) . "\" />\n";
+		}
+
 		// Bing.
 		if ( $this->options['msverify'] !== '' ) {
 			echo '<meta name="msvalidate.01" content="' . esc_attr( $this->options['msverify'] ) . "\" />\n";
@@ -707,7 +744,7 @@ class WPSEO_Frontend {
 
 		}
 		else {
-			if ( is_search() || is_404() ) {
+			if ( is_search() ) {
 				$robots['index'] = 'noindex';
 			}
 			elseif ( is_tax() || is_tag() || is_category() ) {
@@ -720,10 +757,6 @@ class WPSEO_Frontend {
 				$term_meta = WPSEO_Taxonomy_Meta::get_term_meta( $term, $term->taxonomy, 'noindex' );
 				if ( is_string( $term_meta ) && 'default' !== $term_meta ) {
 					$robots['index'] = $term_meta;
-				}
-
-				if ( $this->is_multiple_terms_query() ) {
-					$robots['index'] = 'noindex';
 				}
 			}
 			elseif (
@@ -756,10 +789,9 @@ class WPSEO_Frontend {
 				}
 			}
 
-			$is_paged         = isset( $wp_query->query_vars['paged'] ) && ( $wp_query->query_vars['paged'] && $wp_query->query_vars['paged'] > 1 );
-			$noindex_subpages = $this->options['noindex-subpages-wpseo'] === true;
-			if ( $is_paged && $noindex_subpages ) {
-				$robots['index'] = 'noindex';
+			if ( isset( $wp_query->query_vars['paged'] ) && ( $wp_query->query_vars['paged'] && $wp_query->query_vars['paged'] > 1 ) && ( $this->options['noindex-subpages-wpseo'] === true ) ) {
+				$robots['index']  = 'noindex';
+				$robots['follow'] = 'follow';
 			}
 
 			if ( $this->options['noodp'] === true ) {
@@ -904,38 +936,20 @@ class WPSEO_Frontend {
 		}
 		else {
 			if ( is_search() ) {
-				$search_query = get_search_query();
-
-				// Regex catches case when /search/page/N without search term is itself mistaken for search term. R.
-				if ( ! empty( $search_query ) && ! preg_match( '|^page/\d+$|', $search_query ) ) {
-					$canonical = get_search_link();
-				}
+				$canonical = get_search_link();
 			}
 			elseif ( is_front_page() ) {
-				$canonical = WPSEO_Utils::home_url();
+				$canonical = home_url();
 			}
 			elseif ( $this->is_posts_page() ) {
-
-				$posts_page_id = get_option( 'page_for_posts' );
-				$canonical     = WPSEO_Meta::get_value( 'canonical', $posts_page_id );
-
-				if ( empty( $canonical ) ) {
-					$canonical = get_permalink( $posts_page_id );
-				}
+				$canonical = get_permalink( get_option( 'page_for_posts' ) );
 			}
 			elseif ( is_tax() || is_tag() || is_category() ) {
-
 				$term = get_queried_object();
 
-				if ( ! empty( $term ) && ! $this->is_multiple_terms_query() ) {
+				$canonical_override = WPSEO_Taxonomy_Meta::get_term_meta( $term, $term->taxonomy, 'canonical' );
 
-					$canonical_override = WPSEO_Taxonomy_Meta::get_term_meta( $term, $term->taxonomy, 'canonical' );
-					$term_link          = get_term_link( $term, $term->taxonomy );
-
-					if ( ! is_wp_error( $term_link ) ) {
-						$canonical = $term_link;
-					}
-				}
+				$canonical = get_term_link( $term, $term->taxonomy );
 			}
 			elseif ( is_post_type_archive() ) {
 				$post_type = get_query_var( 'post_type' );
@@ -973,7 +987,7 @@ class WPSEO_Frontend {
 				}
 				else {
 					if ( is_front_page() ) {
-						$canonical = WPSEO_Sitemaps_Router::get_base_url( '' );
+						$canonical = wpseo_xml_sitemaps_base_url( '' );
 					}
 					$canonical = user_trailingslashit( trailingslashit( $canonical ) . trailingslashit( $wp_rewrite->pagination_base ) . get_query_var( 'paged' ) );
 				}
@@ -1011,7 +1025,7 @@ class WPSEO_Frontend {
 	private function base_url( $path = null ) {
 		$url = get_option( 'home' );
 
-		$parts = wp_parse_url( $url );
+		$parts = parse_url( $url );
 
 		$base_url = trailingslashit( $parts['scheme'] . '://' . $parts['host'] );
 
@@ -1057,7 +1071,7 @@ class WPSEO_Frontend {
 
 				// Make sure to use index.php when needed, done after paged == 2 check so the prev links to homepage will not have index.php erroneously.
 				if ( is_front_page() ) {
-					$url = WPSEO_Sitemaps_Router::get_base_url( '' );
+					$url = wpseo_xml_sitemaps_base_url( '' );
 				}
 
 				if ( $paged > 2 ) {
@@ -1427,7 +1441,6 @@ class WPSEO_Frontend {
 
 	/**
 	 * When certain archives are disabled, this redirects those to the homepage.
-	 *
 	 * @return boolean False when no redirect was triggered
 	 */
 	function archive_redirect() {
@@ -1436,7 +1449,7 @@ class WPSEO_Frontend {
 		if (
 			( $this->options['disable-date'] === true && $wp_query->is_date ) ||
 			( $this->options['disable-author'] === true && $wp_query->is_author ) ||
-			( $this->options['disable-post_format'] === true && $wp_query->is_tax( 'post_format' ) )
+			( isset( $this->options['disable-post_formats'] ) && $this->options['disable-post_formats'] && $wp_query->is_tax( 'post_format' ) )
 		) {
 			wp_safe_redirect( get_bloginfo( 'url' ), 301 );
 			exit;
@@ -1519,11 +1532,10 @@ class WPSEO_Frontend {
 
 	/**
 	 * Removes unneeded query variables from the URL.
-	 *
 	 * @return boolean
 	 */
 	public function clean_permalink() {
-		if ( is_robots() || get_query_var( 'sitemap' ) || empty( $_GET ) ) {
+		if ( is_robots() || get_query_var( 'sitemap' ) ) {
 			return false;
 		}
 
@@ -1751,7 +1763,7 @@ class WPSEO_Frontend {
 	function embed_rss( $content, $context = 'full' ) {
 
 		/**
-		 * Filter: 'wpseo_include_rss_footer' - Allow the RSS footer to be dynamically shown/hidden.
+		 * Filter: 'wpseo_include_rss_footer' - Allow the the RSS footer to be dynamically shown/hidden
 		 *
 		 * @api boolean $show_embed Indicates if the RSS footer should be shown or not
 		 *
@@ -1913,27 +1925,4 @@ class WPSEO_Frontend {
 
 		return $keywords;
 	}
-
-	/**
-	 * Check if term archive query is for multiple terms (/term-1,term2/ or /term-1+term-2/).
-	 *
-	 * @return bool
-	 */
-	protected function is_multiple_terms_query() {
-
-		global $wp_query;
-
-		if ( ! is_tax() && ! is_tag() && ! is_category() ) {
-			return false;
-		}
-
-		$term          = get_queried_object();
-		$queried_terms = $wp_query->tax_query->queried_terms;
-
-		if ( empty( $queried_terms[ $term->taxonomy ]['terms'] ) ) {
-			return false;
-		}
-
-		return count( $queried_terms[ $term->taxonomy ]['terms'] ) > 1;
-	}
-}
+} /* End of class */

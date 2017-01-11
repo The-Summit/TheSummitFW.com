@@ -182,4 +182,5 @@ class WPSEO_Import_WPSEO extends WPSEO_Import_External {
 
 		return array( 'index' => 2, 'follow' => 0 );
 	}
+
 }

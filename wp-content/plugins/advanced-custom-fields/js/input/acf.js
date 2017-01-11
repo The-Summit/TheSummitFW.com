@@ -882,7 +882,7 @@ var acf = {
 	*  @created: 22/12/12
 	*/
 	
-	$(window).on('load', function(){
+	$(window).load(function(){
 		
 		// init
 		acf.media.init();

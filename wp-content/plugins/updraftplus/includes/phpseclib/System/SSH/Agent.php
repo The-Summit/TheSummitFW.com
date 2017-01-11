@@ -130,21 +130,9 @@ class System_SSH_Agent_Identity
      * @return System_SSH_Agent_Identity
      * @access private
      */
-    function __construct($fsock)
-    {
-        $this->fsock = $fsock;
-    }
-
-    /**
-     * PHP4 compatible Default Constructor.
-     *
-     * @see self::__construct()
-     * @param resource $fsock
-     * @access public
-     */
     function System_SSH_Agent_Identity($fsock)
     {
-        $this->__construct($fsock);
+        $this->fsock = $fsock;
     }
 
     /**
@@ -281,7 +269,7 @@ class System_SSH_Agent
      * @return System_SSH_Agent
      * @access public
      */
-    function __construct()
+    function System_SSH_Agent()
     {
         switch (true) {
             case isset($_SERVER['SSH_AUTH_SOCK']):
@@ -299,17 +287,6 @@ class System_SSH_Agent
         if (!$this->fsock) {
             user_error("Unable to connect to ssh-agent (Error $errno: $errstr)");
         }
-    }
-
-    /**
-     * PHP4 compatible Default Constructor.
-     *
-     * @see self::__construct()
-     * @access public
-     */
-    function System_SSH_Agent()
-    {
-        $this->__construct();
     }
 
     /**
@@ -343,10 +320,9 @@ class System_SSH_Agent
         for ($i = 0; $i < $keyCount; $i++) {
             $length = current(unpack('N', fread($this->fsock, 4)));
             $key_blob = fread($this->fsock, $length);
-            $key_str = 'ssh-rsa ' . base64_encode($key_blob);
             $length = current(unpack('N', fread($this->fsock, 4)));
             if ($length) {
-                $key_str.= ' ' . fread($this->fsock, $length);
+                $key_comment = fread($this->fsock, $length);
             }
             $length = current(unpack('N', substr($key_blob, 0, 4)));
             $key_type = substr($key_blob, 4, $length);
@@ -356,7 +332,7 @@ class System_SSH_Agent
                         include_once 'Crypt/RSA.php';
                     }
                     $key = new Crypt_RSA();
-                    $key->loadKey($key_str);
+                    $key->loadKey('ssh-rsa ' . base64_encode($key_blob) . ' ' . $key_comment);
                     break;
                 case 'ssh-dss':
                     // not currently supported

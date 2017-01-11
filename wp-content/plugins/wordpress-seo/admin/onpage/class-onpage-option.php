@@ -124,4 +124,5 @@ class WPSEO_OnPage_Option {
 
 		return self::IS_INDEXABLE === $this->get_status();
 	}
+
 }

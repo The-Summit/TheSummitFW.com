@@ -4,8 +4,8 @@
  * OAuth storage handler using WordPress options
  * This can only be used if you have a WordPress environment loaded, such that the (get|update|delete)_option functions are available
  * See an example usage in http://wordpress.org/extend/plugins/updraftplus
- * @author David Anderson <david@updraftplus.com>
- * @link https://updraftplus.com
+ * @author David Anderson <david@wordshell.net>
+ * @link http://wordshell.net
  * @package Dropbox\Oauth
  * @subpackage Storage
  */
@@ -46,27 +46,21 @@ class Dropbox_WordPress implements Dropbox_StorageInterface
     }
     
     /**
-     * Get an entry from the Dropbox options in the database
+     * Get an OAuth token from the database
      * If the encryption object is set then decrypt the token before returning
-     * @param string $type is the key to retrieve
+     * @param string $type Token type to retrieve
      * @return array|bool
      */
     public function get($type)
     {
-        if ($type != 'request_token' && $type != 'access_token' && $type != 'appkey' && $type != 'CSRF' && $type != 'code') {
-            throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF' or 'code', got '$type'");
+        if ($type != 'request_token' && $type != 'access_token') {
+            throw new Dropbox_Exception("Expected a type of either 'request_token' or 'access_token', got '$type'");
         } else {
             if (false !== ($opts = UpdraftPlus_Options::get_updraft_option($this->option_array))) {
-                if ($type == 'request_token' || $type == 'access_token'){
-                    if (!empty($opts[$this->option_name_prefix.$type])) {
-                        $gettoken = $opts[$this->option_name_prefix.$type];
-                        $token = $this->decrypt($gettoken);
-                        return $token;
-                    }
-                } else {
-                    if (!empty($opts[$type])) {
-                        return $opts[$type];
-                    }
+                if (!empty($opts[$this->option_name_prefix.$type])) {
+                    $gettoken = $opts[$this->option_name_prefix.$type];
+                    $token = $this->decrypt($gettoken);
+                    return $token;
                 }
             }
             return false;
@@ -74,56 +68,20 @@ class Dropbox_WordPress implements Dropbox_StorageInterface
     }
     
     /**
-     * Set a value in the database by type
-     * If the value is a token and the encryption object is set then encrypt the token before storing
+     * Set an OAuth token in the database by type
+     * If the encryption object is set then encrypt the token before storing
      * @param \stdClass Token object to set
      * @param string $type Token type
      * @return void
      */
     public function set($token, $type)
     {
-        if ($type != 'request_token' && $type != 'access_token' && $type != 'upgraded' && $type != 'CSRF' && $type != 'code') {
-            throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF', 'upgraded' or 'code', got '$type'");
+        if ($type != 'request_token' && $type != 'access_token') {
+            throw new Dropbox_Exception("Expected a type of either 'request_token' or 'access_token', got '$type'");
         } else {
-            
+            $token = $this->encrypt($token);
             $opts = UpdraftPlus_Options::get_updraft_option($this->option_array);
-            
-            if ($type == 'access_token'){
-                $token = $this->encrypt($token);
-                $opts[$this->option_name_prefix.$type] = $token;
-            } else if ($type == 'request_token' ) {
-                $opts[$this->option_name_prefix.$type] = $token;
-            } else {
-                $opts[$type] = $token;
-            }
-            UpdraftPlus_Options::update_updraft_option($this->option_array, $opts);
-        }
-    }
-    
-    /**
-     * Remove a value in the database by type rather than setting to null / empty
-     * set the value to null here so that when it gets to the options filter it will
-     * unset the value there, this avoids a bug where if the value is not set then 
-     * the option filter will take the value from the database and save that version back.
-     * 
-     * N.B. Before PHP 7.0, you can't call a method name unset()
-     * 
-     * @param string $type Token type
-     * @return void
-     */
-    public function do_unset($type)
-    {
-        if ($type != 'request_token' && $type != 'access_token' && $type != 'upgraded' && $type != 'CSRF' && $type != 'code') {
-            throw new Dropbox_Exception("Expected a type of either 'request_token', 'access_token', 'CSRF', 'upgraded' or 'code', got '$type'");
-        } else {
-            
-            $opts = UpdraftPlus_Options::get_updraft_option($this->option_array);
-            
-            if ($type == 'access_token' || $type == 'request_token'){
-                $opts[$this->option_name_prefix.$type] = null;
-            } else {
-                $opts[$type] = null;
-            }
+            $opts[$this->option_name_prefix.$type] = $token;
             UpdraftPlus_Options::update_updraft_option($this->option_array, $opts);
         }
     }
@@ -135,10 +93,8 @@ class Dropbox_WordPress implements Dropbox_StorageInterface
     public function delete()
     {
         $opts = UpdraftPlus_Options::get_updraft_option($this->option_array);
-        $opts[$this->option_name_prefix.'request_token'] = null;
-        $opts[$this->option_name_prefix.'access_token'] = null;
-        unset($opts['ownername']);
-        unset($opts['upgraded']);
+        $opts[$this->option_name_prefix.'request_token'] = '';
+        $opts[$this->option_name_prefix.'access_token'] = '';
         UpdraftPlus_Options::update_updraft_option($this->option_array, $opts);
         return true;
     }
