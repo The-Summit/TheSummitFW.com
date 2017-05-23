@@ -1,6 +1,6 @@
 //Custom Color
 $trans-white: rgba(255,255,255,.9);
-$trans-black: rgba(41,41,41,.9);
+$trans-black: rgba(41,41,41,.5);
 $almost-white: #f7f7f7;
 $gray-lighter: lighten(#000, 75%);
 
@@ -47,7 +47,7 @@ $navbar-default-link-hover-color:	$brand-primary;
 $navbar-default-link-active-color:	$brand-primary;
 $navbar-default-bg:					$trans-black;
 $navbar-default-link-active-bg:		darken($navbar-default-bg, 3.5%);
-$navbar-default-border:				darken($navbar-default-bg, 6.5%);
+$navbar-default-border:				transparent;
 
 // Carousels
 $carousel-indicator-border-color: 	$brand-primary;

@@ -1,6 +1,9 @@
 header.container{
 	padding: 0;
 }
+.navbar-right{
+	margin-right: 0;
+}
 .content-nav-padding{
 	padding-top: $navbar-collapsed-height;
 }
@@ -32,8 +35,8 @@ header.container{
 			margin-bottom: 3px;
 		}
 		small{
-			white-space: normal;
-			text-transform: initial;				
+			text-transform: initial;
+			font-weight: normal;
 		}
 	}
 	.navbar-nav .open .dropdown-menu{

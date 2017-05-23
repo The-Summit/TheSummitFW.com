@@ -35,6 +35,11 @@
 											{{child.title}}
 										{% if child.attr_title %}<br/><small>{{child.attr_title}}</small></h5>{% endif %}
 									</a>
+									<ul>
+									{%for grandchild in child.get_children%}
+										<li class="list-unstyled"><small><a class="text-primary" href="{{grandchild.get_path}}">{{grandchild.title}}</a></small></li>
+									{% endfor %}
+									</ul>
 								</li>
 								{% endfor %}
 							</ul>
