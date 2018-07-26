@@ -24,9 +24,6 @@ on_stylesheet_saved do |file|
   if File.exists?(file) && File.basename(file) == "style.css"
     puts "Copying: #{file} to " + File.dirname(file) + "/../../../wp-content/themes/summit/"
     FileUtils.copy_file(file, File.dirname(file) + "/../../../wp-content/themes/summit/" + File.basename(file))
-	t = Time.now
-	
-	File.open(File.dirname(file) + "/../../../wp-content/themes/summit/css.ver", 'w') {|f| f.write(t.strftime("%m%d%Y%I%M%S")) }
 	puts "Copied!";
   end
 end

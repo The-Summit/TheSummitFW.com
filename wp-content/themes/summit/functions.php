@@ -1,4 +1,7 @@
 <?php
+/* add composer support */
+require_once('vendor/vendor/autoload.php');
+
 /* add theme support */
 add_theme_support( 'post-thumbnails');
 add_theme_support( 'custom-header', array(
@@ -19,9 +22,6 @@ function scripts_enqueue() {
 	wp_register_script('theme-script', get_template_directory_uri().'/js/script.js', array('jquery','plugins-script','bootstrap'), null, true); 
 	wp_enqueue_script('theme-script');
 }
-
-/* Add CSS version for better caching */
-update_option( "cssver", file_get_contents(get_template_directory() . "/css.ver"));
 
 /* Allow users to switch between all TS programs */
 	
@@ -44,10 +44,11 @@ function wptp_add_categories_to_attachments() {
 add_action( 'init' , 'wptp_add_categories_to_attachments' );
 
 if(is_main_site() && !is_admin()){
-	Timber::add_route('/', function($params){
+	Routes::map('/', function($params) {
 		$cat_id = get_category_by_slug( "pillars" )->cat_ID;
 		$query = 'cat='. $cat_id;
-		Timber::load_template('category.php', $query);
+	 
+		Routes::load('category.php', $params, $query, 200);
 	});
 }
 /* Clean up HEAD */
@@ -350,20 +351,6 @@ function page_categories() {
 }
 add_action( 'admin_init', 'page_categories' );
 
-add_filter('upload_dir', 'move_upload_dir');
-function move_upload_dir($upload) {
-	$upload['path'] = ROOT_DIR . AE_UPLOAD_DIR;
-	$upload['basedir'] = ROOT_DIR . AE_UPLOAD_DIR;
-	if ( !defined('DEV')  || DEV == false){
-		$upload['url'] = home_url() ."/shared/uploads";
-		$upload['baseurl'] = home_url() ."/shared/uploads";
-	}else{
-		$upload['url'] = home_url() ."/wp-content/uploads";
-		$upload['baseurl'] = home_url() ."/wp-content/uploads";
-	}
-	$upload['error'] = false;	
-	return $upload;
-}
 add_action('twig_apply_filters', 'add_ae_twig_filters');
 function add_ae_twig_filters($twig) {
 	$twig->addFilter('better_resize', new Twig_Filter_Function('better_resize'));
@@ -376,10 +363,10 @@ function better_resize($src, $w, $h = 0){
 	$basename = $path_parts['filename'];
 	$ext = $path_parts['extension'];
 	$newname = $basename . '-r-' . $w . 'x' . $h . '.' . $ext;
-	$new_root_path = ROOT_DIR . AE_UPLOAD_DIR . $newname;
-	$old_root_path = ROOT_DIR . AE_UPLOAD_DIR . $basename . '.' . $ext;
+	$new_root_path = wp_upload_dir() . $newname;
+	$old_root_path = wp_upload_dir() . $basename . '.' . $ext;
 	if (file_exists($new_root_path)) {
-		return home_url() . AE_UPLOAD_DIR . $newname;
+		return home_url() . wp_upload_dir() . $newname;
 	}
 	$image = wp_get_image_editor($old_root_path);
 	if (!is_wp_error($image)) {
@@ -412,7 +399,7 @@ function better_resize($src, $w, $h = 0){
 		if (is_wp_error($result)){
 			error_log('Error resizing image');
 		}else{
-			return home_url() . AE_UPLOAD_DIR . $newname;
+			return home_url() . wp_upload_dir() . $newname;
 		}
 	}
 	return $src;
@@ -424,4 +411,11 @@ function allow_svg_upload_mimes( $mimes ) {
 }
 add_filter( 'upload_mimes', 'allow_svg_upload_mimes' );
 
+Routes::map('cs-members', function($params){
+	$url = 'https://api.hubapi.com/contacts/v1/search/query?q=walnut&hapikey=dcd22b19-64de-4b44-bb21-58704ce05799&count=100';
+	header('Content-Type: application/json');
+
+	print_r(file_get_contents($url));
+	exit;
+});
 ?>
