@@ -1,6 +1,6 @@
 <?php
 /* add composer support */
-require_once(get_home_path() . '/vendor/vendor/autoload.php');
+require_once(ABSPATH . '/vendor/vendor/autoload.php');
 
 /* add theme support */
 add_theme_support( 'post-thumbnails');
