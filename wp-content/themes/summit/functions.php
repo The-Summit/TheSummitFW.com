@@ -362,11 +362,13 @@ function better_resize($src, $w, $h = 0){
 	$path_parts = pathinfo($src);
 	$basename = $path_parts['filename'];
 	$ext = $path_parts['extension'];
+	$upload_folder_url = trailingslashit(wp_upload_dir()["url"]);
+	$upload_folder_path = trailingslashit(wp_upload_dir()["path"]);
 	$newname = $basename . '-r-' . $w . 'x' . $h . '.' . $ext;
-	$new_root_path = wp_upload_dir() . $newname;
-	$old_root_path = wp_upload_dir() . $basename . '.' . $ext;
+	$new_root_path = $upload_folder_path . $newname;
+	$old_root_path = $upload_folder_path . $basename . '.' . $ext;
 	if (file_exists($new_root_path)) {
-		return home_url() . wp_upload_dir() . $newname;
+		return $new_root_path_url;
 	}
 	$image = wp_get_image_editor($old_root_path);
 	if (!is_wp_error($image)) {
@@ -399,7 +401,7 @@ function better_resize($src, $w, $h = 0){
 		if (is_wp_error($result)){
 			error_log('Error resizing image');
 		}else{
-			return home_url() . wp_upload_dir() . $newname;
+			return $upload_folder_url . $newname;
 		}
 	}
 	return $src;
