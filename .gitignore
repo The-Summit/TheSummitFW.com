@@ -3,6 +3,7 @@ Capfile
 Gemfile
 *.lock
 config/*
+vendor/*
 .DS_Store
 *.scssc
 styleguide/.sass-cache/

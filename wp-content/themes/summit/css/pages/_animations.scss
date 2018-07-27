@@ -1,0 +1,40 @@
+/* Animation Code*/
+/*
+   Animation example, for spinners
+*/
+
+@mixin transition($what: all, $time: 0.2s, $how: ease-in-out) {
+    -webkit-transition: $what $time $how;
+    -moz-transition:    $what $time $how;
+    -ms-transition:     $what $time $how;
+    -o-transition:      $what $time $how;
+    transition:         $what $time $how;
+}
+.animate-spin {
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+@keyframes spin {
+  0% {
+	transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+.animate-fade{
+	@include transition(opacity,.3s,ease-in-out,0);
+}
+.animate-fade-long{
+	@include transition(opacity,2s,ease-in-out,0);
+}
+.animate-fade.demo-animate:hover,.animate-fade.faded{
+	opacity: 0;
+}
+.animate-move,.animate-move *{
+	@include transition(all,.3s,ease-in-out,0);
+}

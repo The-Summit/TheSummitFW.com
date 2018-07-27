@@ -1,52 +1,305 @@
 === Timber ===
-Contributors: jarednova, lggorman
+Contributors: jarednova, connorjburton, lggorman
 Tags: template engine, templates, twig
-Requires at least: 3.7
-Stable tag: 0.22.5
-Tested up to: 4.4.1
+Requires at least: 4.7.9
+Tested up to: 4.9.6
+Stable tag: 1.7.1
 PHP version: 5.3.0 or greater
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Helps you create themes faster with sustainable code. With Timber, you write HTML using Mustache-like Templates http://timber.upstatement.com
+Helps you create themes faster with sustainable code. With Timber, you write HTML using Twig Templates http://www.upstatement.com/timber/
 
 == Description ==
-Timber cleans-up your theme code so, for example, your php file can focus on being the data, while your twig/html file can focus 100% on the HTML and display.
+Timber helps you create fully-customized WordPress themes faster with more sustainable code. With Timber, you write your HTML using the [Twig Template Engine](http://twig.sensiolabs.org/) separate from your PHP files. This cleans up your theme code so, for example, your PHP file can focus on being the data/logic, while your Twig file can focus 100% on the HTML and display.
 
 Once Timber is installed and activated in your plugin directory, it gives any WordPress theme the ability to take advantage of the power of Twig and other Timber features.
 
-### Looking for docs?
+### Want to learn more?
 * **[Project Page](http://upstatement.com/timber)**
-* [Timber Documentation](https://github.com/jarednova/timber/wiki/)
+* [Timber on GitHub](http://github.com/timber/timber/)
+
+### Looking for Documentation?
+* [Timber Documentation](https://timber.github.io/docs/)
 * [Twig Reference (from SensioLabs)](http://twig.sensiolabs.org/doc/templates.html)
-_Twig is the template language powering Timber; if you need a little background on what a template language is, [Twig's homepage has an overview](http://twig.sensiolabs.org/)_
-* **[Video Tutorials](https://github.com/jarednova/timber/wiki/Video-Tutorials)**
-* [Overview / Getting Started Guide](https://github.com/jarednova/timber/wiki/getting-started)
-
-#### Related Projects
-* [**Timber Debug Bar**](http://wordpress.org/plugins/debug-bar-timber/) Adds a debug bar panel that will show you want template is in-use and the data sent to your twig file.
-
-#### What does it look like?
-Nothing. Timber is meant for you to build a theme on. Like the [Starkers](https://github.com/viewportindustries/starkers) or [_s theme](https://github.com/Automattic/_s) it comes style-free, because you're the style expert. Instead, Timber handles the logic you need to make a kick-ass looking site.
-
-#### Who is it good for?
-Timber is great for any WordPress developer who cares about writing good, maintainable code. It helps teams of designers and developers working together. At [Upstatement](http://upstatement.com) we made Timber because not everyone knows the ins-and-outs of the_loop(), WordPress codex and PHP (nor should they). With Timber your best WordPress dev can focus on building the .php files with requests from WordPress and pass the data into .twig files. Once there, designers can easily mark-up data and build out a site's look-and-feel.
-
-#### Want to read more?
-* [Timber on GitHub](http://github.com/jarednova/timber/)
-* [Timber Overview on Tidy Repo](http://tidyrepo.com/timber/)
-* ["Timber and Twig Reignited My Love for WordPress" on CSS-Tricks](https://css-tricks.com/timber-and-twig-reignited-my-love-for-wordpress/)
-
-
+_Twig is the template language powering Timber; if you need a little background on what a template language is, [Twig’s homepage has an overview](http://twig.sensiolabs.org/)_
+* **[Video Tutorials](https://timber.github.io/docs/getting-started/video-tutorials/)**
+* [Overview / Getting Started Guide](https://timber.github.io/docs/getting-started/)
 
 == Changelog ==
+
+= Develop (next release) =
+
+**Fixes and improvements**
+- Please add bullet points here with your PR. The heading for this section will get the correct version number once released.
+
+**Changes for Theme Developers**
+- Please add any usage changes here so theme developers are informed of changes.
+
+= 1.7.1 =
+**Fixes and improvements**
+- Fixes issues previewing custom fields with ACF #1712
+- Fixes some edge cases with Menu Item classes #1709
+- Improved efficiency of Post class instantiation #1660
+
+
+= 1.7.0 =
+**Fixes and improvements**
+- Fixed some issues with animated gif resizing when Imagick isn't available #1653
+- Fixed incorrect reporting of depth level in some comments #1648
+- Fixed issues with preview permissions #1607
+- Fixed issue with image resize in some WPML setups #1625
+- Fixes compatibility issues with Twig 2.4 (and later) #1641
+
+
+= 1.6.0 =
+**Changes for Theme Developers**
+- You can now easily access all of a MenuItem's master object properties through `{{ item.master_object }}` What's a master object? It's when a Menu Item has been created directly from a Post or Term in the WP Admin #1577 #1572
+- Enabled methods for getting media from posts, you can now do `{{ post.video }}`, `{{ post.audio }}` and `{{ post.gallery }}` to retrieve media include in the body of a post #1583 (thanks @marciojc)
+- You can now get ACF's field object data: `{{ post.field_object('my_field').key }}` #1597 #1599 (thanks @palmiak)
+- You can use the `|filter` filter on arrays to return items like so:
+```
+{% for post in posts|filter('my-slug') %}
+    {{ post.title }}
+{% endfor %}
+```
+by default it looks for slugs, but you can also get into particular fields:
+```
+{% for post in posts|filter({post_title: "Cheese", post_content:"Method Man"}) %}
+    {{ post.title }}
+{% endfor %}
+```
+... this will return posts that match both parameters. #1594 thanks @pablo-sg-pacheco
+
+= 1.5.2 =
+
+**Fixes and improvements**
+- Fixed a bug where multi-level menus weren't receiving proper data
+
+= 1.5.1 =
+
+**Fixes and improvements**
+- Transparent PNGs now work with letterboxing #1554 (thanks @nlemoine)
+
+**Changes for Theme Developers**
+- You can now interact with Terms in Twig the same as PHP (ex: `{% set term = Term(34, "arts") %}`). The second arg will default to a subclass of Timber\Term if it exists #1159 (@jarednova)
+- You can now get {{ theme.version }} to get the theme version! #1555 (thanks @herrschuessler)
+
+= 1.5.0 =
+
+**Fixes and improvements**
+- `home_url` value is now cached, performance win for polylang! #1507 (thanks @oxyc)
+- Post::$css_class is only fetched if requested #1522 (thanks @ruscon)
+- Improved flexibility of PostCollection to be filterable #1544 (thanks @gchtr)
+- More test coverage
+
+**Changes for Theme Developers**
+- None! But the above fixes have significant changes in the code which necessitated the ".x" version jump
+
+= 1.4.1 =
+
+**Fixes and improvements**
+- Fix for WPML URLs in some situations #1513 (thanks @ChrisManganaro)
+- Fix for PHP 5.5 issue with some URLs #1518 (thanks @danFWD)
+
+= 1.4.0 =
+
+**Fixes and Improvements**
+- Improve GIF resize performance #1495 (thanks @ahallais)
+- Fix for get_host which could generate an unnecessary warning #1490 (thanks @ahallais)
+
+**Changes for Theme Developers**
+- Improve loader performance and logic #1476 #1489 #1491 (thanks @heino). This introduces potential changes if you were loading templates in a non-standard way and with multiple sources (ex: from a theme and plugin directory). Non-existing templates are no longer passed all the way to Twig’s `render()`, which currently generates an exception.
+
+= 1.3.4 =
+* Fix for Twig 2.0 compatibility issue #1464 (thanks @luism-s)
+
+= 1.3.3 =
+* Fix for HTTPs issues with images
+
+= 1.3.2 =
+* Fix for image bug with WPML and Roots/Bedrock active #1445 (thanks @njbarrett)
+* Fix for some HTTPs issues #1448 (thanks @baldursson)
+* Improved docs! #1441 (thanks @gchtr)
+* Allow ACF to convert single WP_Post objects to Timber Posts #1439 (thanks @luism-s)
+
+= 1.3.1 =
+* Fix for Timber::get_widgets with Twig 2.0 #1422 (thanks @gchtr)
+* Fix for WPML Menus #1414 (thanks @mikeyb31)
+* Fix for WPCLI integration #1429 #1430 (thanks @vyarmolenko)
+* Fix for image format processing #1421 (thanks @mgussekloo)
+
+= 1.3.0 =
+* Default $context object now returns a PostQuery for $context['posts'] this is cool because you can use `{{ posts.pagination }}` in your Twig templates without any further PHP work (thanks @lggorman)
+* Timber\Images with PDFs and other content types now return the file instead of null # (thanks @hoandang)
+* Timber\Comments now support different comment types #1364 (thanks @yantei)
+* Timber\Comments {{ comment.content }} now returns processed comment with `<p>` tags
+* Fix for HTTP error when uploading media files in Windows #1346 (thanks Matias Griese)
+* Fix for image resizing on alternative WP setups (thanks @gillesgoetsch)
+* Exposing a function to global Twig scope through Timber\FunctionWrapper is deprecated, the preferred method to do this is through a Twig template like `{{ function('my_cool_function', 'my_argument') }}` (thanks @gchtr)
+* Fixed issues with use of Twig 2.0 (#1370)
+* Fixed up some things with Timber/Archives and getting post_count #1376
+* Don't let Timber fail when converting TIFFs or other weird file types, instead return the passed value w/o modifying #1383
+* Updated `FunctionWrapper` with appropriate warnings and Twig 2.0 compatibility (thank you thank you @gchtr)
+Misc fixes to documentation
+
+= 1.2.4 =
+* Fixed regression from S3 handling #1330 (@gchtr)
+
+= 1.2.3 =
+* Fixed a potential XSS security issue
+* Fixed handling of images stored on S3
+
+= 1.2.2 =
+* A bunch of fixes to how images in themes are handled #1317 #1293 (@jarednova)
+* Fixed filter for avatar images in comments #1310 (@xavivars)
+* Upgrades to PHPUnit and testing suite (@jarednova)
+
+= 1.2.1 =
+* Cleaned-up theme handling #1281 (thanks @xavivars)
+* Refactor of Pagination #1284 (thanks again @xavivars)
+* Fixed an error in Admin #1285 (thanks @alexanderanberg)
+* Fixed an issue with User->id #1283 (thanks @drumba)
+
+= 1.2.0 =
+* Fixed issues with WordPress 4.7
+* Introduced Timber\CommentThread object
+
+= 1.1.12 =
+* Fixed Twig issue with deprecation #1265 (thanks @codesman)!
+* Cleaned-up the warnings for WP.org users and disabled easy updates for major/milestone versions 331314d9aaf90a52ff1c5a213656b8c02a27c60e
+
+= 1.1.11 =
+* Improved flexibility for public query_vars #1250 (thanks @xavivars)
+* Children should inehrit publish state #1255 (thanks @motia)
+* Pages are sorted by their menu order instead of publish order #1251 (thanks @forgandenny)
+* Fixes to object caching #1259
+
+= 1.1.10 =
+* Added support for Co-Authors Plus Guest Authors #1239 (thanks @motia)
+* Fix for Yoast SEO with multisite #1244 (thanks @alexandernanberg)
+* Fixes issues with basedir restrictions that arose in Timber 1.1.9 #1245
+
+= 1.1.9 =
+* Timber now retrieves native term meta info #824
+* Added site icon support in Theme #1210
+* Fixes to menu getting by slug #1237 (thanks @motia)
+* Fix to off-site image URLs! #1234 (thanks @njbarrett)
+* Fix inconsistency with Post::get_terms #1222 (thanks @haroldangenent)
+
+= 1.1.8 =
+* Fixed image generation when images are updated/deleted by WordPress (thanks @dudewithamood)
+
+= 1.1.7.1 =
+* Quick fix for backwards compatibility in some situations
+
+= 1.1.7 =
+* A new PostQuery object that comes _with_ pagination (thanks @lggorman).
+* You can pass an array of post types to `post.children()` (thanks @njbarrett)
+
+= 1.1.6 =
+* Kill those transients! Timber now wipes expired ones away 9a5851bf36110dcb399e277d51230f1addb0c53c
+* Fixed a warning that was annoying and nobody liked and didn't have any friends c53b4c832cfced01157f8196688468ad3318d3fb
+
+= 1.1.5 =
+* Removed change for custom loaders due to incompatability with Gantry
+
+= 1.1.4 =
+* Native support for Co-Authors Plus! just use `{{ post.authors }}` 939331e282fd54bf3e210645964504304f2b071b
+* New filter to enable PW propmpt for PW protected posts (`timber/post/content/show_password_form_for_protected`) 0f9b20ec90b34059634c25bc27671875c18f8fcb
+* New filter for custom loaders (`timber/loader/custom`) (thanks @tnottu!) 9097984a7c3df23068056d7835465e0690338567
+* Fixed some updating bugs with 4.6 (thanks @daronspence) 16b8bd71571be71b298e6306abe2cd4b95d8c9e8
+* You can now count Query results (thanks Evan Mattson) 141624a0ac18d9dcce62a2a681134009a2b79814
+
+= 1.1.3 =
+* New escapers! (thanks @matgargano) c7e8ed34da6fcd13bdc9005c04045f3a6b33595b
+* Fix to how categories work in Timber::get_posts 49f6007db3f829097f82ed41d389dd39053fb84a
+* Fix to usage of class maps in Timber::get_posts (thanks @vilpersson) b1387e443850aa021a0a70203bc20d238d4b21cb
+* Added Post::password_required method (thanks @marclarr) 2e685ce3d05c50e879817e51256202e032e77122
+* You can filter the link markup for Post::get_preview (thanks @LiljebergXYZ) b8100d7f2601b4da40bcc0a873c071b6ecf267f1
+
+= 1.1.2 =
+* Fix to how post IDs are retrieved (thanks @lggorman) 798acd90ee603de2d009828127bdeaab503beb10
+* Fixes to pagination in search (@jarednova) 1d1ab67f124b02d8c60646f7b133abdf68cedc38
+* Fixes to hooks for Timber Debug Bar (@jarednova) 82a914ec0be5be1011a15c1584c2c8e2999f1c1c
+
+= 1.1.1 =
+* Fixed 301 redirects for pagination (thanks @xavivars)
+* Added new escaping filter options for `|e('wp_kses_post')` and `|e('esc_url')`(thanks @matgargano)
+* Fixed pagination warning (thanks @nikola3244)
+* More test coverage
+* Fixed issue with archive limits (@jarednova)
+
+= 1.1.0 =
+* Fixed how Timber loads with Composer (thanks @connorjburton and @mrgrain)
+* Updated docs! (thanks @lggorman and @kateboudreau)
+* Fixed ImageHelper paths (thanks @TuureKaunisto)
+* Added new filters for render (thanks @johnbillion)
+* Fixed issue with timestamp conversion (thanks @thedamon)
+* Fixed localization bugs (thanks @FlyingDR)
+
+= 1.0.5 =
+* Restored prior `{{ post.type }}` behavior for existing custom fields (@jarednova) 6c9574912e526b8589eb134b79820c7e239a1dda
+* Fixed errors in PHP 7 (@FlyingDR) 48ba0fc125c2d19eeb0de0a895a83a9d3bb5a398
+* Misc bug fixes and upkeep (@connorjburton + @jarednova)
+
+= 1.0.4 =
+* New method for `{{ post.type }}` this makes it easy to access things like `{{post.type.labels.name}}` right in Twig https://github.com/timber/timber/pull/1003
+* New method for `{{ post.preview }}` which makes it easy to customize like `{{post.preview.length(50).read_more("Keep Reading").end('........')}}` https://github.com/timber/timber/pull/1015
+* Added `Timber::get_term` (thanks @connorjburton!) 58fe671757b30a8eb9de2589bbb817448662e121
+* Fix for revision issue (thanks @dknoben!) 70de6640c68a1321394aaa95202dea70e0755664
+* Fix for issue with uppercase file extensions (thanks @connorjburton) 5632359329894d1b95cd643470950d319628f4c6
+* Better handling for gifs (thanks @connorjburton) 91c40b852c056e0f096345d976767f2e5e993ce9
+* Fix on some old class names in there (thanks @mrgrain) 63fe60ba18c6fce5d545983334af3f752c7c2755
+* Pagination with post counts (thanks @lggorman) 2bcacbe50c90c7936da61d29238e3b52910a3ff9
+* Remove `Timber::get_pids` (@jarednova) 4278d11d25aaca0d60cbde32c32783dc0effac6b
+* Fixed deprecation in Twig (thanks @simonmilz) 6c80f1d5fd48b8fcbd335f6c8e9c6fed1b008e26
+* Handle ACF image arrays (thanks @connorjburton) 039be5d880fa7f9c9763f4ebd6c40863f4820e0a
+
+= 1.0.3 =
+* Hot fix for PHP 5.3 error
+
+= 1.0.2 =
+* Fixed possible infinite loop with Timber::get_context (thanks @connorjburton) 376928d59dd5f2dd2f389c61217530ba54e40b24
+* Removed bug in Term (thanks @Jmayhak) a5e3c30b9eb12acea06bc914cd6b3673ead06012
+* {{ user.avatar }} now returns an Image object (thanks @connorjburton) 51dd7329aee6212490daee5742280286e221f2e8
+* Attention Comment Form fans! {{ post.comment_form }} now gives you a friggin' comment form 9009ac12536a0199a1bb071ac41b2e91152bef4d
+* Helper\comment_form also gives you a comment form. 9009ac12536a0199a1bb071ac41b2e91152bef4d
+
+= 1.0.1 =
+* {{ user.avatar }} property is now available (thanks @connorjburton) d21eb85
+* #947: Fix to pagination base (thanks @matsrietdijk) 270d7c2
+* Fix to some namespacing issues (thanks @connorjburton) 0a8346a
+* #958: Call the_post action to help other plugins (thanks @felthy) 4442703
+* #976: Fixed problem with static declaration (@jarednova) c888606
+* #978: Bug with arrays for post types (thanks @connorjburton) 571f6f8
+
+= 1.0.0 =
+* Added `{{ user }}` object to context
+* Exposed translation functions
+* Added better error reporting/warnings
+* Fixed some things with function wrapper
+* Timber is now namespaced, big big thanks to @connorjburton
+* Cleanup of spacing
+* Removed deprecated functions, added warning for key functions
+* Updated version numbers and build script (@jarednova) 81a281e
+* Corrected Routes -> /Routes which threw a fatal error (@jarednova) 26b6585
+
+= 0.22.6 =
+* New {{request}} object for post/get variables (thanks @connorjburton) #856
+* New crop positions (thanks @salaros) #861
+* Bug Fixes
+
+* Fix to "next" in pagination (thanks @connorjburton) #900
+* Fix to issue with tojpg filter's images not being deleted (thanks @connorjburton) #897
+* `{{post.parent.children}}` used to return unpublished posts due to underlying behavior in WordPress, it now only returns published posts (thanks @connorjburton) #883
 
 = 0.22.5 =
 * Fixed errors in tests (thanks @lggorman)
 * Fixed error in comments_link (thanks @tehlivi)
 
 = 0.22.4 =
-* Fixed [bug](https://github.com/jarednova/timber/issues/785) in get_calling_script file (thanks @gwagroves)
+* Fixed [bug](https://github.com/timber/timber/issues/785) in get_calling_script file (thanks @gwagroves)
 * Added tons of new tests and docs (thanks @lggorman and @jarednova)
 
 = 0.22.3 =
@@ -61,7 +314,7 @@ Timber is great for any WordPress developer who cares about writing good, mainta
 * Added support for animated gifs
 
 = 0.22.1 =
-* Added better support for [post.get_terms](https://github.com/jarednova/timber/pull/737) (thanks @aaemnnosttv)
+* Added better support for [post.get_terms](https://github.com/timber/timber/pull/737) (thanks @aaemnnosttv)
 * Fix for issue with ACF date field (thanks @rpkoller)
 * Fix for resizing jpEgs (thanks @eaton)
 
@@ -228,7 +481,7 @@ Timber is great for any WordPress developer who cares about writing good, mainta
 * Hotfix on timber-admin error
 
 = 0.17.0 =
-* Now you can resize/crop images with positional preferences, thanks @mmikkel. Here are the docs: https://github.com/jarednova/timber/wiki/TimberImage#resize
+* Now you can resize/crop images with positional preferences, thanks @mmikkel. Here are the docs: https://github.com/timber/timber/wiki/TimberImage#resize
 * Removed the Timber Starter Guide from the admin, a link to the GitHub wiki suffices.
 
 = 0.16.8 =
@@ -323,7 +576,7 @@ Timber is great for any WordPress developer who cares about writing good, mainta
 * New Timber::compile method which _doesn't_ automatically echo. (Same args as Timber::render)
 * Added post.get_next / post.get_prev for TimberPosts
 * Fixed a thing to make get_preview easier when you want to omit the 'Read More' link
-* Read the [Full Release Notes](https://github.com/jarednova/timber/releases/tag/0.15.0)
+* Read the [Full Release Notes](https://github.com/timber/timber/releases/tag/0.15.0)
 
 = 0.14.1 =
 * Added hooks to play nicely with Timber Debug Bar
@@ -415,7 +668,7 @@ Timber is great for any WordPress developer who cares about writing good, mainta
 
 == Screenshots ==
 
-1. This what a normal WordPres PHP file looks like
+1. This what a normal WordPress PHP file looks like
 2. With Timber, you write Twig files that are super-clear and HTML-centric.
 
 == Installation ==
@@ -423,42 +676,39 @@ Timber is great for any WordPress developer who cares about writing good, mainta
 1. Activate the plugin through the 'Plugins' menu in WordPress
 2. For an example, try modifying your home.php or index.php with something like this:
 
-`
+```
 $context = array();
 $context['message'] = 'Hello Timber!';
-Timber::render('welcome.twig', $context);
-`
+Timber::render( 'welcome.twig', $context );
+```
 
-Then create a subdirectory called `views` in your theme folder. The make this file: `views/welcome.twig`
-`
-{# welcome.twig #}
+Then create a subdirectory called `views` in your theme folder. Then create a file `views/welcome.twig` with these contents:
+
+```
 <div class="welcome">
-	<h3>{{message}}</h3>
+    <h3>{{ message }}</h3>
 </div>
-`
+```
 
-That's Timber!
+That’s Timber!
 
 == Support ==
 
-Please use the [GitHub repo](https://github.com/jarednova/timber/issues?state=open) to file bugs or questions.
+Please post on [StackOverflow under the "Timber" tag](http://stackoverflow.com/questions/tagged/timber). Please use GitHub issues only for specific bugs, feature requests and other types of issues.
 
 == Frequently Asked Questions ==
 
 = Can it be used in an existing theme? =
-You bet! Watch these **[video tutorials](https://github.com/jarednova/timber/wiki/Video-Tutorials)** to see how.
+You bet! Watch these **[Video Tutorials](https://timber.github.io/docs/getting-started/video-tutorials/)** to see how.
 
 = Is it used in production? =
-At Upstatement we've now used it on more than a dozen client sites. Hundreds of other sites use it too. You can check some of them out in the **[showcase](http://upstatement.com/timber/#showcase)**.
+Tens of thousands of sites now use Timber. You can check some of them out in the **[Showcase](http://upstatement.com/timber/#showcase)**.
 
-= Doesn't this all make WordPress harder since there's more to learn? =
-Does jQuery make JavaScript harder? Yes, it's an extra piece to learn -- but it super-charges your ability to write unencumbered JavaScript (and prevents you from having to learn lots of the messy internals). If your answer is "jQuery sucks and everyone should learn how to write vanilla JS or they're rotten stupid people," this tool isn't for you.
+= Doesn't this all make WordPress harder since there’s more to learn? =
+Does jQuery make JavaScript harder? Yes, it’s an extra piece to learn — but it super-charges your ability to write unencumbered JavaScript (and prevents you from having to learn lots of the messy internals). If your answer is "jQuery sucks and everyone should learn how to write vanilla JavaScript or they’re rotten stupid people," this tool isn’t for you.
 
-= Oh, Timber is simple code so it's for making simple themes =
-Whatever. It simplifies the silly stuff so that you can focus on building more complicated sites and apps. jQuery simplifies Javascript, but you can still use the full range of JS's abilities.
+= Oh, Timber is simple code so it’s for making simple themes =
+Whatever. It simplifies the silly stuff so that you can focus on building more complicated sites and apps. jQuery simplifies Javascript, but you can still use the full range of JavaScript’s abilities.
 
 = Will you support it? =
-As stated above, we're using it in dozens of sites (and dozens more planned) -- dozens of other developers are using it too. This isn't going anywhere. Twig is the chosen language for other PHP platforms like Symfony, Drupal 8 and Craft. WordPress will eventually adopt Twig too, I promise you that.
-
-= Support? =
-Leave a [GitHub issue](https://github.com/jarednova/timber/issues?state=open) and I'll holler back.
+At [Upstatement](https://upstatement.com) we’re using it in dozens of sites (and many more planned) -- thousands of other developers are using it too. This isn’t going anywhere. Twig is the chosen language for other PHP platforms like Symfony, Drupal 8 and Craft.

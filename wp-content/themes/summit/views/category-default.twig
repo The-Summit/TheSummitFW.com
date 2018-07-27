@@ -4,8 +4,8 @@
 {% block content %}
 <div class="">
 	<div class="row main">
-		<img class="img-responsive" src="{{ cat.img|better_resize(2000) }}" />
-		<h1 class="col-xs-12 col-md-8 col-md-offset-2">
+		<img class="img-fluid" src="{{ cat.img|better_resize(2000) }}" />
+		<h1 class="col-12 col-md-8 offset-md-2">
 			{% block description %}
 				**blank**
 			{% endblock %}
@@ -39,15 +39,15 @@
 				}
 			</style>			
 			<div id="row{{loop.index}}" class="row row{{loop.index}}">
-				<h2 class="col-xs-12 col-md-12">{{ child.name }} 
-					<small class="col-xs-12 col-md-8 col-md-offset-2"> {{ child.description }}</small>
+				<h2 class="col-12 col-md-12">{{ child.name }} 
+					<small class="col-12 col-md-8 offset-md-2"> {{ child.description }}</small>
 				</h2>
 			</div>
 			<div class="row examples">
-				<div class="col-md-8 col-md-offset-2">
+				<div class="col-md-8 offset-md-2">
 					{% for post in child.posts %}
 						<a href="/{{post.post_type}}#{{post.slug}}">
-							<img class="img-responsive" src="{{TimberImage(post.logo).src}}" />
+							<img class="img-fluid" src="{{TimberImage(post.logo).src}}" />
 						</a>
 					{% endfor %}			
 				</div>
@@ -56,7 +56,7 @@
 	{% endblock %}
 	<div class="text-center">
 		<h2 class="base">Interested in learning more?</h2>
-		<h3><a href="/contact-us" class="btn btn-lg btn-primary">Reach Out! <span class="glyphicon glyphicon-chevron-right"></span></a></h3>
+		<h3><a href="/contact-us" class="btn btn-lg btn-primary">Reach Out! <i class="fas fa-caret-right"></i></a></h3>
 	</div>
 </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 <?php
-/* add composer support */
-require_once(ABSPATH . '/vendor/vendor/autoload.php');
+	/* add composer support */
+require_once(ABSPATH . '/vendor/autoload.php');
+use Leafo\ScssPhp\Compiler;
 
 /* add theme support */
 add_theme_support( 'post-thumbnails');
@@ -13,11 +14,11 @@ if (!is_admin()) add_action("wp_enqueue_scripts", "scripts_enqueue", 11);
 function scripts_enqueue() {
 	wp_deregister_script('jquery');
 	if(preg_match('/(?i)msie [2-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-		wp_register_script('jquery', "http://code.jquery.com/jquery-1.11.0.min.js", false, null, true);   
+		wp_register_script('jquery', "https://code.jquery.com/jquery-1.11.0.min.js", false, null, true);   
 	}else{
-		wp_register_script('jquery', "http://code.jquery.com/jquery-2.1.0.min.js", false, null, true);   
+		wp_register_script('jquery', "https://code.jquery.com/jquery-3.3.1.min.js", false, null, true);   
 	}
-	wp_register_script('bootstrap', "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js", array('jquery'), null, true); 
+	wp_register_script('bootstrap', "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js", array('jquery'), null, true); 
 	wp_register_script('plugins-script', get_template_directory_uri().'/js/plugins.js', array('jquery'), null, true);
 	wp_register_script('theme-script', get_template_directory_uri().'/js/script.js', array('jquery','plugins-script','bootstrap'), null, true); 
 	wp_enqueue_script('theme-script');

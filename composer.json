@@ -1,0 +1,6 @@
+{
+    "require": {
+        "leafo/scssphp": "0.7.6",
+		"sendgrid/sendgrid": "~7"
+    }
+}
