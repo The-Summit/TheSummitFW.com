@@ -368,7 +368,7 @@ function better_resize($src, $w, $h = 0){
 	$new_root_path = $upload_folder_path . $newname;
 	$old_root_path = $upload_folder_path . $basename . '.' . $ext;
 	if (file_exists($new_root_path)) {
-		return $new_root_path_url . $newname;
+		return $upload_folder_url . $newname;
 	}
 	$image = wp_get_image_editor($old_root_path);
 	if (!is_wp_error($image)) {
