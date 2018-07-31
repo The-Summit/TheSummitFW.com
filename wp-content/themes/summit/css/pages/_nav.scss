@@ -1,0 +1,22 @@
+.navbar-brand{
+	max-width: 40%;
+}
+@include media-breakpoint-up(md) {
+	.navbar-brand{
+		max-width: 20%;
+	}
+}
+.navbar-nav{	
+	font-size: 1.25rem;
+	.dropdown-item{
+		white-space: normal;
+	}
+	@include media-breakpoint-up(md) {
+		.dropdown-item{
+			white-space: nowrap;	
+		}
+	}
+	.nav-link h5{
+		font-weight: 300;
+	}
+}

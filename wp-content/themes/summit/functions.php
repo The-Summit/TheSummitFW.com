@@ -24,20 +24,6 @@ function scripts_enqueue() {
 	wp_enqueue_script('theme-script');
 }
 
-/* Allow users to switch between all TS programs */
-	
-function global_nav(){
-	$sites = wp_get_sites();
-	$original = get_current_blog_id();
-	$header_images = [];
-	foreach($sites as $site){
-		switch_to_blog($site->blog_id);
-		array_push($header_images, array(get_site_url()=>get_header_image()));
-	}
-	switch_to_blog($original);
-	return $header_images;
-}
-
 /* Let categories have featured images */
 function wptp_add_categories_to_attachments() {
       register_taxonomy_for_object_type( 'category', 'attachment' );  

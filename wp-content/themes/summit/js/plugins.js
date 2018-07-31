@@ -26,41 +26,6 @@
 
 })(jQuery,'smartresize');
 
-/* Bootstrap / Gravity Forms Validation */
-(function($){
-        var gform = $(document).find('.gform_wrapper').attr('class');
-            $(document).on('gform_post_render',function(){
-                var form = $('.gform_wrapper');
-                var controlGroup = $('.gfield');
-                controlGroup.each(function(){
-                    $(this).addClass('form-group').find('input, textarea, select').not('input[type="checkbox"], input[type="radio"]').addClass('form-control');
-                });
-                form.find("input[type='submit'], input[type='button']").end().find('.gfield_error').removeClass('gfield_error').addClass('has-error');
-				form.find("input[type='submit']").wrap("<div class='gform_submit'>");
-				form.find(".gform_body,.gform_footer").addClass("row");
-                $('.gfield_checkbox, .gfield_radio').find('input[type="checkbox"], input[type="radio"]').each(function(){
-                    var sib = $(this).siblings('label');
-                    $(this).prependTo(sib);
-                }).end().each(function(){
-                    $(this).after('<span class="help-block"></span>');
-                    if($(this).is('.gfield_checkbox')){
-                        $(this).addClass('checkbox');
-                    } else {
-                        $(this).addClass('radio');
-                    }
-                });
-                $('.validation_message').each(function(){
-                    var sib = $(this).prev().find('.help-block');
-                    $(this).appendTo(sib);
-                });
-                $('.validation_error').addClass('alert alert-danger col-md-4 col-md-offset-4');
-                $('.gf_progressbar').addClass('progress progress-striped active').children('.gf_progressbar_percentage').addClass('progress-bar progress-bar-success');
-            });
-		$(document).on('submit',".gform_wrapper form",function(){
-			$($.find('.gform_ajax_spinner')).hide().after("<span class='animate-spin icon-spin1'></span>");
-		});
-    })(jQuery);
-
 /*
     TimelineJS - ver. 2.29.0 - 2014-01-22
     Copyright (c) 2012-2013 Northwestern University

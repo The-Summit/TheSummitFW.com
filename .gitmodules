@@ -1,0 +1,3 @@
+[submodule "wp-content/themes/summit/css/vendor/form-gf-bootstrap"]
+	path = wp-content/themes/summit/css/vendor/form-gf-bootstrap
+	url = https://github.com/lekkerduidelijk/form-gf-bootstrap

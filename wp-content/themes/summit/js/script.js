@@ -1,79 +1,11 @@
 $j = jQuery.noConflict();
 $j(document).ready(function(){
-	$j(window).on("resize",function(){
-		$j(".onepager .carousel,.full-panel").setCarHeight();
-	}).trigger("resize");
-	
 	$j("#history-timeline").setupTimeline();
 	$j("body").trackExternalClicks();
 	$j('[data-toggle="tooltip"]').tooltip();
-	$j('[data-layout="grid"]').effects();
 	$j('[data-layout="map"]').campusMap();	
-	$j('[data-layout="configurator"]').configurator();
 	$j("[data-src]").loadSVG();
-	$j(".post-type-archive-bios .flex-child").on("mouseleave",function(){
-		return $j(this).scrollTop(0);
-	});
 });
-$j.fn.effects = function(){
-	if(this.length){
-		var didScroll = true;
-		
-		$j(window).scroll(function() {
-			didScroll = true;
-		});
-		
-		setInterval(function() {
-			if ( didScroll ) {
-				didScroll = false;
-				$j(".flex-child").each(function(){
-					var th = $j(this),
-					win = $j(window),
-					top_of_object = th.position().top,
-					bottom_of_window = win.scrollTop() + win.height();
-					if( bottom_of_window > top_of_object ){
-						th.css("opacity",1);
-					}
-				});
-			}
-		}, 250);
-		
-		$j(window).on("hashchange",function(e){
-			if(window.location.hash.length>2){
-				$j(window.location.hash).flip();
-				$j('html, body').animate({
-					scrollTop: $j(window.location.hash).offset().top - $j(".navbar").outerHeight() - Number($j(".content-nav-padding").css("paddingTop").replace("px",""))
-				}, 1000);
-			}
-		});
-		
-		$j(".flex-child").on("click",function(e){
-			$j(this).flip();
-		});
-		$j("body").on("click","#content.backdrop",function(){
-			$j(".flipped").unFlip();
-		});
-		
-		if(window.location.hash.length>1){
-			$j(window).trigger("hashchange");
-		}
-	}
-	return this;
-}
-$j.fn.flip = function(){
-	if(this.is(".flex-child")){
-		this.addClass("flipped");
-		$j("#content").addClass("backdrop");
-		window.location.hash = this.attr("id");
-	}
-	return this;
-}
-$j.fn.unFlip = function(){
-	this.removeClass("flipped");
-	$j("#content").removeClass("backdrop");
-	window.location.hash = "_";
-	return this;
-}
 $j.fn.setupTimeline = function(){
 	var el = this;
 	if(el.length){
@@ -89,12 +21,6 @@ $j.fn.setupTimeline = function(){
 		});
 	}
 	return el;
-}
-$j.fn.setCarHeight = function(){
-	if(this.length){
-		this.height($j(window).height()-30);
-	}
-	return this;
 }
 $j.fn.trackExternalClicks = function(){
 	var filetypes = /\.(zip|exe|dmg|pdf|doc.*|xls.*|ppt.*|mp3|txt|rar|wma|mov|avi|wmv|flv|wav)$/i;
@@ -212,23 +138,6 @@ $j.fn.moveToVisible = function(){
 	win.animate({
 		scrollTop: topy
 	}, 250);
-}
-$j.fn.configurator = function(){
-	if(this.length){
-		var control = this.find("#chooser");
-		
-		control.on("change",function(){
-			window.location.hash = $j(this).find("option:selected").val();
-		});
-		
-		$j(window).on("hashchange",function(){
-			var hash = window.location.hash.replace("#","");
-			control.val(hash);
-			$j("[data-type='property']").addClass("hidden");
-			$j("[data-variant='" + hash + "']" ).removeClass("hidden");
-		}).trigger("hashchange");
-	}
-	return this;
 }
 $j.fn.loadSVG = function(){
 	this.each(function(){

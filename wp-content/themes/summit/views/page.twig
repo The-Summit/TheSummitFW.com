@@ -1,13 +1,10 @@
 {% extends "base.twig" %}
 {% block content %}
-	<section class="content-nav-padding row">
-		{% include ["full-page-bg.twig"] %}
-		<div class="col-12">
-			<h1 class="accent offset-md-1">{{posts[0].title}}</h1>
-			<div class="offset-md-1">
-				{{ posts[0].content|wpautop }}
-			</div>
+	<div class="jumbotron jumbotron-fluid">
+		<div class="container">
+			<h1 class="display-4">{{posts[0].title}}</h1>
+			<p class="lead">{{ posts[0].content|wpautop }}</p>
 		</div>
-	</section>
+	</div>
 {% endblock %}
 {% block source %}page.twig{% endblock %}

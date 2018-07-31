@@ -1,53 +1,37 @@
-<header class="container-fluid">
-	<nav class="navbar navbar-expand-xl navbar-light bg-light" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand logo" href="{{ bloginfo('url') }}/">
-					<img class="img-fluid" src="{{ function("header_image") }}" alt="The Summit">
-				</a>
-				 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapser">
-				</button>
-			</div>
-			<div class="collapse navbar-collapse" id="collapser">
-				<ul class="nav navbar-nav navbar-right mr-auto">
-				{% for item in menu.items %}
-					<li id="menu-item-{{item.ID}}" class="{% if item.get_children %} dropdown {% endif %} menu-item menu-item-type-{{item.type}} menu-item-object-{{item.object}} menu-item-{{item.ID}}">
-						{% if item.get_children %}
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{item.title}}<b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								{% for child in item.get_children %}
-								<li class="sub-navigation-item">
-									<a href="{{child.get_path}}">
+<header class="">
+	<nav class="navbar navbar-expand-md navbar-light bg-light" role="navigation">
+		<a class="navbar-brand logo" href="{{ bloginfo('url') }}/">
+			<img class="img-fluid" src="{{ function("header_image") }}" alt="The Summit">
+		</a>
+		<button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#collapser"><i class="fas fa-bars"></i></button>
+		<div class="collapse navbar-collapse" id="collapser">
+			<div class="nav navbar-nav ml-md-auto d-md-flex">
+			{% for item in menu.items %}
+				{% if item.get_children %}
+					<span class="nav-item dropdown px-2">
+						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{item.title}}<b class="caret"></b></a>
+						<div class="dropdown-menu dropdown-menu-right">
+							{% for child in item.get_children %}
+								<div class="dropdown-item">
+									<a class="nav-link" href="{{child.get_path}}">
 										{% if child.attr_title %}<h5>{% endif %}
 											{{child.title}}
 										{% if child.attr_title %}<br/><small>{{child.attr_title}}</small></h5>{% endif %}
 									</a>
-									<ul>
 									{%for grandchild in child.get_children%}
-										<li class="list-unstyled"><small><a class="text-primary" href="{{grandchild.get_path}}">{{grandchild.title}}</a></small></li>
+										<a class="nav-link py-0 pl-3 text-primary" href="{{grandchild.get_path}}">{{grandchild.title}}</a>
 									{% endfor %}
-									</ul>
-								</li>
-								{% endfor %}
-							</ul>
-						{% else %}
-							<a href="{{item.link}}">{{item.title}}</a>
-						{% endif %}
-					</li>
-				{% endfor %}
-					<li class="menu-item menu-item-type-contact dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fas fa-comments"></i></a>
-						<ul class="dropdown-menu">
-							<li><a href="tel:260.446.3200"><span class="glyphicon glyphicon-earphone"></span>260.446.3200</a></li>
-							<li><a target="_blank" href="http://map.thesummitfw.com"><i class="fas fa-comments"></i>1025 W. Rudisill</a></li>
-							<li><a href="/contact-us"><i class="fas fa-envelope"></i>Send a Message</a></li>
-							<li class="divider"></li>
-							<li class="social-buttons">
-								{% include ["social.twig"] %}
-							</li>
-						</ul>
-					</li>
-				</ul>
+								</div>
+							{% endfor %}
+						</div>
+					</span>
+				{% else %}
+					<a href="{{item.link}}" class="nav-link nav-item px-2">{{item.title}}</a>
+				{% endif %}
+			{% endfor %}
+			<div class="dropdown-divider d-md-none"></div>
+			<a target="_blank" href="https://twitter.com/TheSummit_FW" class="nav-link nav-item"><i class="fab fa-twitter"></i></a>
+			<a target="_blank" href="https://www.facebook.com/TheSummitFW" class="nav-link nav-item"><i class="fab fa-facebook"></i></a>			
 			</div>
 		</div>
 	</nav>

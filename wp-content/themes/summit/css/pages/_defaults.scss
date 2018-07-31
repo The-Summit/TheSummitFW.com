@@ -1,49 +1,5 @@
 html{
 	background: #fafafa;
-	height: 100%;
-}
-body{
-	background: none;
-	padding-top: $navbar-height + 20px;
-	padding-bottom: 20px;
-	overflow-x: hidden;
-	min-height: 100%;		
-}
-body, html {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
-h1,h2,h3,h4,h5,h6{
-	text-transform: uppercase;
-}
-p{
-	font-weight: 300;
-}
-h1{
-	&.accent{
-		font-size: 24px;
-		margin-top: 10px;
-		margin-bottom: 0;
-	}
-	&.leadertext{
-		line-height: 1em;
-		margin-top: 45px;
-		margin-bottom: 45px;
-		small{
-			text-transform: none;
-		}
-	}
-	@include media-breakpoint-up(sm) {
-		&.accent{
-			font-size: 60px;
-		}
-	}
-	@include media-breakpoint-up(lg) {
-		&.accent{
-			font-size: 80px;
-		}
-	}	
 }
 blockquote {
 	background: $gray-lighter;
@@ -229,9 +185,6 @@ span.amp {
 }
 
 .single-programs .education{
-	h1,h2,h3,h4,h5{
-		text-transform: none;
-	}
 	h2{
 		clear: both;
 		color: rgb(1,134,81);
@@ -270,9 +223,6 @@ span.amp {
 	}
 }
 .single-programs .schools{
-	h1,h2,h3,h4,h5{
-		text-transform: none;
-	}
 	h2{
 		clear: both;
 		color: rgb(1,117,170);

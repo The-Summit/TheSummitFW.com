@@ -1,27 +1,11 @@
 {% if not post.hidden %}
 <div class="col-md-6 col-lg-4 col-12">
 	<div class="card">
-	{% if post.video %}
-		<video autoplay loop preload="auto" src="{{post.get_field('video')}}" class="card-img-top"></video>
-	{% endif %}
-	<style>
-		#{{post.post_name}}:before{
-			{% if post.avatar %}
-				background-image:url({{TimberImage(post.avatar).src|better_resize(500)}});
-			{% elseif post.logo %}
-				background-image:url({{TimberImage(post.logo).src|better_resize(1000)}});
-			{% elseif post.title %}
-				content: "{{post.title}}"
-			{% endif %}
-		}
-		{% if post.background_image %}
-			{% set img = post.background_image %}
-		{% else %}
-			{% set img = post.thumbnail %}
-		{% endif %}
-		{% if not post.video %}
-		{%endif%}
-	</style>
+	{% if post.background_image %}
+		{% set img = post.background_image %}
+	{% else %}
+		{% set img = post.thumbnail %}
+	{% endif %}	
 		<img class="card-img-top" src="{{TimberImage(img).src|better_resize(900)}}">
 		<div class="card-body">
 			<div class="card-text">
@@ -41,7 +25,7 @@
 								{% if post.logo %}
 									<a target="_blank" href="{{website}}"><img src="{{TimberImage(post.logo).src|better_resize(500)}}" class="img-fluid partner-brand" alt="{{TimberImage(post.logo).title}}"/></a>
 								{% else %}
-									{{post.title}}
+									<h3>{{post.title}}</h3>
 								{% endif %}							
 								{% set rates = {"hourly":post.regular_hourly_rate,"half-day":post.regular_half_day_rate,"full-day":post.regular_full_day_rate,"nightly":post.regular_nightly_rate} %}
 								{% if website %}<p class="truncate" data-toggle="tooltip" data-placement="top" title="{{website|replace({'http://':'','https://':'','www.':''})|trim("/")}}" ><strong>Web: </strong><br/><a target="_blank" href="{{website}}">{{website|replace({'http://':'','https://':'','www.':''})|trim("/")}}</a></p>{% endif %}
@@ -50,7 +34,6 @@
 								{% for key,rate in rates%}
 									{% if rate %}<p class="rate"><strong>{{key}}:</strong> <a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}">${{rate}}</a></p>{% endif %}
 								{% endfor %}		
-								{% if post.layout_1_title %}<p><strong>Layouts:</strong><br/><a href="/room-configurator#{{post.post_name}}_1">Configurator</a></p>{% endif %}
 								{% if rates["hourly"] > 0 or rates["nightly"] %}<a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}" class="btn btn-primary">Contact to Book!</a>{% endif %}
 
 							</div>
