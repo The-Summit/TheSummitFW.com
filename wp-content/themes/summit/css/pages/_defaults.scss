@@ -74,22 +74,11 @@ hr{
 	}	
 }
 
-.btn-apply{
-	position: fixed;
-	top: 100px;
-	right: 20px;
-	z-index: 99;
-}
 .truncate{
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.partner-brand{
-	max-height: 80px;
-	margin-bottom: 10px;
-}
-
 .rate{
 	text-transform: capitalize;
 }
@@ -111,41 +100,8 @@ span.amp {
 }
 
 .single-programs .education{
-	h2{
-		clear: both;
-		color: rgb(1,134,81);
-		font-size: 44px;
-	}
-	small{
-		display: block;
-		margin-top: 5px;
-	}
-	hr{
-		margin-bottom: 60px;
-	}
-	.accent, .caption h3{
-		color: #03784b;
-	}
-	.btn-primary{
-		color: #fff;
-		background-color: #03784b;
-		border-color: #016d42;
-	}
-	blockquote{
-		margin-top: 30px;
-		width: auto;
-		border-left: 10px solid #03784b;
-		background-color: rgb(248, 248, 248);
-	}
-	blockquote:after {
-		color: #f3c050;
-		content: '';
-	}
-	.symposium-format img{
-	max-height: 300px;
-	}
-	.symposium-format .row {
-		margin-bottom: 50px;
+	.row {
+		margin-bottom: 25px;
 	}
 }
 .single-programs .schools{
