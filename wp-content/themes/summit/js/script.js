@@ -5,7 +5,34 @@ $j(document).ready(function(){
 	$j('[data-toggle="tooltip"]').tooltip();
 	$j('[data-layout="map"]').campusMap();	
 	$j("[data-src]").loadSVG();
+	$j(".category-pillars").fixBGSize();
 });
+$j.fn.fixBGSize = function(){
+	var $item = $j('.carousel-item'); 
+	var $itemBG = $item.find(".bg-img");
+	var $wHeight = $j(window).height() - $j(".navbar").outerHeight();
+	$item.eq(0).addClass('active');
+	$itemBG.height($wHeight); 
+	$item.height($wHeight); 
+	$itemBG.addClass('full-screen');
+
+	$j('.carousel img').each(function() {
+		var $src = $j(this).attr('src');
+		var $color = $j(this).attr('data-color');
+		$j(this).parent().find(".bg-img").css({
+			'background-image' : 'url(' + $src + ')',
+			'background-color' : $color
+		});
+		$j(this).remove();
+	});
+
+	$j(window).on('resize', function (){
+		$wHeight = $j(window).height() - $j(".navbar").outerHeight();
+		$itemBG.height($wHeight);
+	});
+
+	$j('.carousel').carousel();
+}
 $j.fn.setupTimeline = function(){
 	var el = this;
 	if(el.length){

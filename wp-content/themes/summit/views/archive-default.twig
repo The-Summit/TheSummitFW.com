@@ -2,20 +2,17 @@
 {% block source %}archive-default.twig{% endblock %}
 {% block layout %}grid{% endblock %}
 {% block content %}
-<div class="">
-	
-	<div class="jumbotron jumbotron-fluid">
-		<div class="container">
-			<h1 class="display-4">{% block title %}{{ archive_singular }}{% endblock %}</h1>
-			<p class="lead">{% block description %}{{ archive_desc|e('wp_kses_post')}}{% endblock %}</p>
-		</div>
-	</div>	
-	<div class="card-deck">
-		{% block postfilter %}
-			{% for post in posts if post.parent==0 %}
-					{% include ["pane-grid.twig"] %}
-			{% endfor %}
-		{% endblock %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4">{% block title %}{{ archive_singular }}{% endblock %}</h1>
+		<p class="lead">{% block description %}{{ archive_desc|e('wp_kses_post')}}{% endblock %}</p>
 	</div>
+</div>	
+<div class="card-deck">
+	{% block postfilter %}
+		{% for post in posts if post.parent==0 %}
+				{% include ["pane-grid.twig"] %}
+		{% endfor %}
+	{% endblock %}
 </div>
 {% endblock %}

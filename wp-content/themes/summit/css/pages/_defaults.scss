@@ -1,5 +1,5 @@
 html{
-	background: #fafafa;
+	background: $white;
 }
 blockquote {
 	background: $gray-lighter;
@@ -51,12 +51,29 @@ hr{
 	background: tint($primary,50%);
 	margin: 25px 0;
 }
-.bg{
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	height: 100%;
+.carousel{
+	.carousel-item{
+		-webkit-transform-style: preserve-3d;
+		-moz-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+	.carousel-caption{
+		text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+		top: 50%;
+		transform: translateY(-50%);
+		bottom: initial;
+	}
+	.carousel-control-prev,.carousel-control-next{
+		background: none;
+		font-size: $h1-font-size*2;
+	}
+	.bg,.full-screen {
+	  background-size: cover;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	}	
 }
+
 .btn-apply{
 	position: fixed;
 	top: 100px;
@@ -72,97 +89,9 @@ hr{
 	max-height: 80px;
 	margin-bottom: 10px;
 }
-.caption{
-	position: absolute;
-	background: $trans-black;
-	box-shadow: 0px 0px 3px 1px #5a5a5a;
-	text-align: left;
-	bottom: 0;
-	color: #fff;
-	padding: 5px;
-	h3{
-		@extend .accent;
-		text-align: left;
-		font-size: $h3-font-size * 1;
-	}
-	p{
-		font-size: $font-size-sm;
-		line-height: 1.2
-	}
-	ul,li{
-		font-size: $font-size-sm * .75;
-	}
-	.btn{
-		margin-right: 20px;
-		padding: 4px 5px;
-		line-height: 1em;
-		font-size: $font-size-sm;
-	}
-	@include media-breakpoint-up(sm) {
-		padding: 15px;
-		p{
-			font-size: $font-size-base;
-			line-height: $line-height-base;
-		}
-		ul,li{
-			font-size: $font-size-base * .75;
-		}
-		h3{
-			font-size: $h3-font-size * 1.5;
-		}
-		.btn{
-			padding: 6px 12px;
-			font-size: $font-size-base;
-			line-height: $line-height-base;
-		}
-	}
-	@include media-breakpoint-up(md) {
-		padding: 10px 40px;
-		p{
-			font-size: $font-size-base;
-		}
-		ul,li{
-			font-size: $font-size-base*.8;
-		}
-		h3{
-			font-size: $h3-font-size * 1.75;
-		}
-	}
-	@include media-breakpoint-up(md) {
-		padding: 10px 40px;
-		p{
-			font-size: $font-size-lg;
-		}
-		ul,li{
-			font-size: $font-size-lg*.8;
-		}
-		.btn{
-			font-size: $font-size-lg;
-		}
-	}
-}
-.media{
-	margin-bottom: 30px;
-	.media-left{
-		width: 64px;
-		height: auto;
-		img{
-			border-radius: 50% 50%;
-		}
-	}
-}
-.push-down{
-	margin-top: 20px;
-}
-.offset15{
-	margin-left: 15px;
-	margin-right: 15px;
-}
+
 .rate{
 	text-transform: capitalize;
-}
-.full-panel{
-	position: relative;
 }
 .popover{
 	max-width: 100%;

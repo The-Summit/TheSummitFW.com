@@ -2,61 +2,34 @@
 {% block source %}category-default.twig{% endblock %}
 {% block layout %}scroll{% endblock %}
 {% block content %}
-<div class="">
-	<div class="row main">
-		<img class="img-fluid" src="{{ cat.img|better_resize(2000) }}" />
-		<h1 class="col-12 col-md-8 offset-md-2">
-			{% block description %}
-				**blank**
-			{% endblock %}
-		</h1>
-	</div>	
-	{% block postfilter %}
-		{% for child in cat.children %}
-			<style>
-				.row{{loop.index}}{
-					background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65)),url('{{ child.img|better_resize(767) }}');
-				}
-				@media (min-width: 768px) {
-					.row{{loop.index}}{
-						background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65)),url('{{ child.img|better_resize(991) }}');
-					}
-				}
-				@media (min-width: 992px) {
-					.row{{loop.index}}{
-						background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65)),url('{{ child.img|better_resize(1199) }}');
-					}
-				}
-				@media (min-width: 1200px) {
-					.row{{loop.index}}{
-						background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65)),url('{{ child.img|better_resize(1400) }}');
-					}
-				}
-				@media (min-width: 1900px) {
-					.row{{loop.index}}{
-						background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65)),url('{{ child.img|better_resize(2000) }}');
-					}
-				}
-			</style>			
-			<div id="row{{loop.index}}" class="row row{{loop.index}}">
-				<h2 class="col-12 col-md-12">{{ child.name }} 
-					<small class="col-12 col-md-8 offset-md-2"> {{ child.description }}</small>
-				</h2>
-			</div>
-			<div class="row examples">
-				<div class="col-md-8 offset-md-2">
-					{% for post in child.posts %}
-						<a href="/{{post.post_type}}#{{post.slug}}">
-							<img class="img-fluid" src="{{TimberImage(post.logo).src}}" />
-						</a>
-					{% endfor %}			
+	<div class="row d-block">
+		<div class="carousel slide" data-ride="carousel" id="carouselIndicators">
+			<ol class="carousel-indicators">
+				{% for child in cat.children %}
+					<li data-target="#carouselIndicators" data-slide-to="{{loop.index0}}" class="{%if loop.index == 1 %}active{%endif%}"></li>
+				{% endfor %}
+			</ol>
+			<div class="carousel-inner">
+				{% for child in cat.children %}
+				<div class="carousel-item {%if loop.index == 1 %}active{%endif%}">
+					<div class="bg-img"></div>
+					<img src="{{ child.img|better_resize(2000) }}" />
+					<div class="carousel-caption">
+						<h1>{{ child.name }}</h1>
+						<p class="lead">{{ child.description }}</p>
+						<h3><a href="/partners" class="btn btn-lg btn-primary">Learn More<i class="fas fa-caret-right"></i></a></h3>
+					</div>					
 				</div>
+				{% endfor %}
 			</div>
-		{% endfor %}
-	{% endblock %}
-	<div class="text-center">
-		<h2 class="base">Interested in learning more?</h2>
-		<h3><a href="/contact-us" class="btn btn-lg btn-primary">Reach Out! <i class="fas fa-caret-right"></i></a></h3>
+			<a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+				<i class="fas fa-chevron-left"></i>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+				<i class="fas fa-chevron-right"></i>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
 	</div>
-</div>
 {% endblock %}

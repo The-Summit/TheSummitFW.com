@@ -9,7 +9,7 @@
 			{% for item in menu.items %}
 				{% if item.get_children %}
 					<span class="nav-item dropdown px-2">
-						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{item.title}}<b class="caret"></b></a>
+						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{item.title}}</a>
 						<div class="dropdown-menu dropdown-menu-right">
 							{% for child in item.get_children %}
 								<div class="dropdown-item">
