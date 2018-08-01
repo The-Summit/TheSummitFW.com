@@ -1,6 +1,6 @@
 <?php
 	/* add composer support */
-require_once(ABSPATH . '/vendor/autoload.php');
+require_once(trailingslashit(ABSPATH) . 'vendor/autoload.php');
 use Leafo\ScssPhp\Compiler;
 
 /* add theme support */
