@@ -7,13 +7,11 @@
 // Variable defaults
 @import "bootstrap-TS";
  
-// Vendor styles
-@import "vendor/form-gf-bootstrap/form-gf-bootstrap.scss";
-
 // Base Bootstrap
 @import "bootstrap/bootstrap";
 
-
+// Vendor styles
+@import "vendor/form-gf-bootstrap/form-gf-bootstrap.scss";
 
 // Custom styles
 @import "pages/defaults";

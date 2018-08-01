@@ -75,7 +75,7 @@ $j.fn.campusMap = function(){
 	if($j(".campus-map").length){
 		$j(".campus-map svg")
 			.height($j(window).height()-$j(".navbar").outerHeight()-20)
-			.width($j(".campus-map").width() - 20).closest(".campus-map").removeClass("invisible");
+			.width($j(".campus-map").width() - 20).closest(".campus-map").removeClass("d-none");
 		$j("#buildings>g,#numbers>g").on("click",function(e){
 			var el = $j(this);
 			e.stopPropagation();			
@@ -86,7 +86,7 @@ $j.fn.campusMap = function(){
 				svg = $j(".campus-map svg");
 			if(!hash){window.location.hash = "#dh"}
 			svg.clearActiveSVG().moveToVisible();
-			$j("#buildings>g").popover("destroy");
+			$j("#buildings>g").popover("dispose");
 			$j.each(hash.split(","),function(num,el){
 				var jel = $j("#" + el);
 				jel.makeActiveSVG();
@@ -95,8 +95,8 @@ $j.fn.campusMap = function(){
 						on = text.find("[data-building='" + el.replace("b","") + "']")
 					
 					on.each(function(){
-						text.find("[data-attach='" + $j(this).data("type") + "']").removeClass("hidden");
-					}).removeClass("hidden");
+						text.find("[data-attach='" + $j(this).data("type") + "']").removeClass("d-none");
+					}).removeClass("d-none");
 					
 					if(on.data("main_door")){
 						$j("#d"+on.data("main_door").toLowerCase()).makeActiveSVG();
@@ -110,7 +110,7 @@ $j.fn.campusMap = function(){
 						title : on.data("building_name")
 					}).popover("show");
 					$j("body").one("click",function(){
-						$j("#buildings>g").popover("destroy");
+						$j("#buildings>g").popover("dispose");
 						window.location.hash = "#dh";
 					});
 				}
@@ -128,7 +128,7 @@ $j.fn.clearActiveSVG = function(){
 		pre = el.attr("class");
 		el.attr("class",pre.replace(" active",""));
 	});
-	$j("#buildings>g").popover("destroy");
+	$j("#buildings>g").popover("dispose");
 	return this;
 }
 $j.fn.moveToVisible = function(){
