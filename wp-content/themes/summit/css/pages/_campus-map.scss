@@ -7,7 +7,7 @@
 		}
 		#buildings{
 			rect,polygon{
-				fill: $brand-primary;
+				fill: $primary;
 				cursor: pointer;
 			}
 			.active{
@@ -24,8 +24,8 @@
 			}
 			.active{
 				circle{
-					fill: $brand-warning;
-					stroke: $brand-warning;
+					fill: $warning;
+					stroke: $warning;
 					stroke-width: 5px;
 				}
 			}

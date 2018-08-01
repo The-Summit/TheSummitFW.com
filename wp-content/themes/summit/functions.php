@@ -205,13 +205,16 @@ function add_to_context($context){
 				$post->background_image = new TimberImage($post->background_image);
 			}
 		}
-		if($context['posts'][0]->post_name=="campus-map" || $context['posts'][0]->post_name=="room-configurator" ){
+		if($context['posts'][0]->post_name=="campus-map" ){
 			$context['partners'] = Timber::get_posts(array('post_type' => 'partners', 'nopaging' => true));
 			$context['properties'] = Timber::get_posts(array('post_type' => 'property', 'nopaging' => true));
 			$context['buildings'] = Timber::get_posts(array('post_type' => 'buildings', 'nopaging' => true));
 			$search = array($context['partners'],$context['properties']);
 		}elseif(is_archive()){
 			$search = array($context['posts']);
+			$obj = get_post_type_object( $context['posts'][0]->post_type ); 
+			$context["archive_desc"] = html_entity_decode($obj->description);
+			$context["archive_singular"] = esc_html( $obj->labels->singular_name );
 		}else{
 			return $context;
 		}
@@ -228,7 +231,6 @@ function add_to_context($context){
 	}
 	return $context;
 }
-
 /*
 	******Allow Custom Post Archives in WP menus******
    Copyright 2012  soulseekah  (twitter: @soulseekah)

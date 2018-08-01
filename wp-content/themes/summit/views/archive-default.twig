@@ -6,8 +6,8 @@
 	
 	<div class="jumbotron jumbotron-fluid">
 		<div class="container">
-			<h1 class="display-4">{% block title %}***{% endblock %}</h1>
-			<p class="lead">{% block description %}***{% endblock %}</p>
+			<h1 class="display-4">{% block title %}{{ archive_singular }}{% endblock %}</h1>
+			<p class="lead">{% block description %}{{ archive_desc|e('wp_kses_post')}}{% endblock %}</p>
 		</div>
 	</div>	
 	<div class="card-deck">

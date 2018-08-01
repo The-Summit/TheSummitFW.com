@@ -4,13 +4,13 @@ html{
 blockquote {
 	background: $gray-lighter;
 	position: relative;
-	border-left: 10px solid $brand-primary;
+	border-left: 10px solid $primary;
 	padding: 2em 0;
 	@extend .col-12;
 	@extend .col-md-10;
 	@extend .offset-md-1;
 	&:after {
-		color: tint($brand-warning,30%);
+		color: tint($warning,30%);
 		content: '\201D';
 		font-size: 130px;
 		line-height: 0;
@@ -42,13 +42,13 @@ blockquote {
 	}
 }
 mark{
-	background: $brand-warning;
+	background: $warning;
 }
 hr{
 	border: 0;
 	height: 1px;
 	clear: both;
-	background: tint($brand-primary,50%);
+	background: tint($primary,50%);
 	margin: 25px 0;
 }
 .bg{
@@ -56,9 +56,6 @@ hr{
 	background-position: center;
 	background-repeat: no-repeat;
 	height: 100%;
-}
-.accent{
-	color: $brand-warning;
 }
 .btn-apply{
 	position: fixed;

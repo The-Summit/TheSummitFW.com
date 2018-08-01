@@ -4,11 +4,16 @@
  * Copyright 2018 The Summit
  */
  
-// Base Bootstrap, including overwritten variables in the TS-Bootstrap file
-@import "bootstrap/bootstrap";
-
+// Variable defaults
+@import "bootstrap-TS";
+ 
 // Vendor styles
 @import "vendor/form-gf-bootstrap/form-gf-bootstrap.scss";
+
+// Base Bootstrap
+@import "bootstrap/bootstrap";
+
+
 
 // Custom styles
 @import "pages/defaults";
