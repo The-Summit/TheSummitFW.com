@@ -9,7 +9,7 @@ $j(document).ready(function(){
 $j.fn.setupTimeline = function(){
 	var el = this;
 	if(el.length){
-		var pad = $j(".leadertext").outerHeight() + $j(".navbar").outerHeight() + Number($j(".content-nav-padding").css("paddingTop").replace("px",""));
+		var pad = $j(".jumbotron").outerHeight() + $j(".navbar").outerHeight();
 		createStoryJS({
 			type:       'timeline',
 			width:      '100%',
