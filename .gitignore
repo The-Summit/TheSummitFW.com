@@ -10,6 +10,5 @@ latest-change.txt
 wp-content/updraft/*
 wp-content/uploads/*
 .htaccess
-*/scss_cache/*
 *.meta
 wp-content/themes/summit/css/scss_cache/98e7a032e351b261671a6526d5950cd1.css
