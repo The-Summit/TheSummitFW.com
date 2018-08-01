@@ -1,0 +1,31 @@
+.gform_validation_container{
+	@extend .d-none;
+}
+.gform_button{
+	@extend .btn;
+	@extend .btn-outline-primary;
+	@extend .btn-lg;
+}
+.gform_wrapper .gfield_checkbox{
+	br{
+		@extend .d-none;
+	}
+	li input{
+		position: relative;
+		margin-left: 1.25rem;
+	}
+}
+.ui-widget{
+	@extend .popover;
+	min-width: 250px;
+}
+.ui-widget-header{
+	@extend .popover-header;
+}
+.ui-datepicker-calendar{
+	@extend .popover-body;
+	min-width: 250px;
+}
+.ui-datepicker-prev,.ui-datepicker-next{
+	@extend .d-none;
+}
