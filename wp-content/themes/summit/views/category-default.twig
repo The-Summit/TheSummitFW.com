@@ -5,19 +5,19 @@
 	<div class="row d-block">
 		<div class="carousel slide" data-ride="carousel" id="carouselIndicators">
 			<ol class="carousel-indicators">
-				{% for child in cat.children %}
+				{% for post in posts %}
 					<li data-target="#carouselIndicators" data-slide-to="{{loop.index0}}" class="{%if loop.index == 1 %}active{%endif%}"></li>
 				{% endfor %}
 			</ol>
 			<div class="carousel-inner">
-				{% for child in cat.children %}
+				{% for post in posts %}
 				<div class="carousel-item {%if loop.index == 1 %}active{%endif%}">
 					<div class="bg-img"></div>
-					<img src="{{ child.img|better_resize(2000) }}" />
+					<img src="{{ Image(post.front_background_image|default(post.background_image)).src|better_resize(2000) }}" />
 					<div class="carousel-caption">
-						<h1>{{ child.name }}</h1>
-						<p class="lead">{{ child.description }}</p>
-						<h3><a href="/partners" class="btn btn-lg btn-primary">Learn More <i class="fas fa-caret-right"></i></a></h3>
+						<h1>{{ post.front_page_title|default(post.title) }}</h1>
+						<p class="lead">{{ post.blurb }}</p>
+						<h3><a href="{{post.link_location|default(post.link)}}" class="btn btn-lg btn-primary">Learn More <i class="fas fa-caret-right"></i></a></h3>
 					</div>					
 				</div>
 				{% endfor %}

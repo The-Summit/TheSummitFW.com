@@ -32,9 +32,14 @@ add_action( 'init' , 'wptp_add_categories_to_attachments' );
 
 if(is_main_site() && !is_admin()){
 	Routes::map('/', function($params) {
-		$cat_id = get_category_by_slug( "pillars" )->cat_ID;
-		$query = 'cat='. $cat_id;
-	 
+		$query = array(
+			'post_type'	=> 'any',
+			'cat'		=> 'front-page',
+			'meta_key'	=> 'front_page_order',
+			'orderby'	=> 'meta_value_num',
+			'order'		=> 'ASC'
+		);
+		$params['title'] = "Shared Campus, Thriving Community";
 		Routes::load('category.php', $params, $query, 200);
 	});
 }
