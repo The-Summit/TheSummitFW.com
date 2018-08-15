@@ -1,5 +1,10 @@
 {% if not post.hidden %}
-<div class="col-md-6 col-lg-3 col-12">
+	{% set possible_meta = ["landing_page","website","building","layout_1_title","regular_hourly_rate","regular_half_day_rate","regular_full_day_rate","regular_nightly_rate","apply_now_link"] %}
+	{% set show_meta = false %}
+	{% for meta in possible_meta if post.get_field(meta)%}
+		{% set show_meta = true %}
+	{% endfor %}
+	<div class="col-md-6 col-lg-3 {% if show_meta %}col-lg-4{% endif %} col-12">
 	<div class="card">
 	{% if post.background_image %}
 		{% set img = post.background_image %}
@@ -15,11 +20,6 @@
 					{% else %}
 						{% set website = post.website %}
 					{% endif %}
-					{% set possible_meta = ["landing_page","website","building","layout_1_title","regular_hourly_rate","regular_half_day_rate","regular_full_day_rate","regular_nightly_rate","apply_now_link"] %}
-					{% set show_meta = false %}
-					{% for meta in possible_meta if post.get_field(meta)%}
-						{% set show_meta = true %}
-					{% endfor %}
 						{% if show_meta %}
 							<div class="col-12 col-md-4">
 								{% if post.logo %}
