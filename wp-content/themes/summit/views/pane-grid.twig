@@ -1,5 +1,5 @@
 {% if not post.hidden %}
-	<div class="col-md-6 col-lg-3 {% if show_meta %}col-lg-4{% endif %} col-12">
+	<div class="col-md-6 col-lg-4 col-12">
 	<div class="card">
 	{% if post.background_image %}
 		{% set img = post.background_image %}
@@ -30,7 +30,7 @@
 								{% if rates["hourly"] > 0 or rates["nightly"] %}<a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}" class="btn btn-primary">Contact to Book!</a>{% endif %}
 
 							</div>
-						<div class="col-12 {% if show_meta %}col-md-7{% else %}col-md-12{% endif %}">
+						<div class="col-12 col-md-8">
 							{% if post.about %}
 								{{ post.about|wpautop }}
 							{% elseif post.content %}
