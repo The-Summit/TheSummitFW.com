@@ -1,9 +1,4 @@
 {% if not post.hidden %}
-	{% set possible_meta = ["landing_page","website","building","layout_1_title","regular_hourly_rate","regular_half_day_rate","regular_full_day_rate","regular_nightly_rate","apply_now_link"] %}
-	{% set show_meta = false %}
-	{% for meta in possible_meta if post.get_field(meta)%}
-		{% set show_meta = true %}
-	{% endfor %}
 	<div class="col-md-6 col-lg-3 {% if show_meta %}col-lg-4{% endif %} col-12">
 	<div class="card">
 	{% if post.background_image %}
@@ -15,12 +10,11 @@
 		<div class="card-body">
 			<div class="card-text">
 				<div class="row">
-					{% if post.landing_page %}
-						{% set website = post.link %}
-					{% else %}
+					{% if post.website %}
 						{% set website = post.website %}
+					{% else %}
+						{% set website = post.link %}
 					{% endif %}
-						{% if show_meta %}
 							<div class="col-12 col-md-4">
 								{% if post.logo %}
 									<a target="_blank" href="{{website}}"><img src="{{TimberImage(post.logo).src|better_resize(500)}}" class="img-fluid partner-brand" alt="{{TimberImage(post.logo).title}}"/></a>
@@ -36,7 +30,6 @@
 								{% if rates["hourly"] > 0 or rates["nightly"] %}<a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}" class="btn btn-primary">Contact to Book!</a>{% endif %}
 
 							</div>
-						{% endif %}
 						<div class="col-12 {% if show_meta %}col-md-7{% else %}col-md-12{% endif %}">
 							{% if post.about %}
 								{{ post.about|wpautop }}
