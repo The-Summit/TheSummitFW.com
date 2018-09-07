@@ -1,11 +1,8 @@
 {% extends "base.twig" %}
 {% block content %}
-	<div class="jumbotron jumbotron-fluid">
-		<div class="container">
-			<h1 class="display-4">{{posts[0].title}}</h1>
-			<p class="lead">{{ posts[0].jumbotron_blurb }}</p>	
-		</div>
-	</div>
+	{% set jumbo_text = posts[0].jumbotron_blurb %}
+	{% set jumbo_title = posts[0].title %}
+	{% include "jumbotron.twig" %}
 	<div class="container">
 		<img src="{{ posts[0].thumbnail.src }}" class="img-fluid" alt="{{ posts[0].title }}" />
 		{{ posts[0].content|wpautop }}

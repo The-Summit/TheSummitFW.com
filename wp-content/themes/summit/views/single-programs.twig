@@ -3,22 +3,19 @@
 {% block bodyclass %}single-programs-{{posts[0].title|sanitize|lower}}{% endblock %}
 
 {% block content %}
+	{% set jumbo_text = posts[0].jumbotron_blurb %}
+	{% set jumbo_title = posts[0].title %}
+	<div class="row align-items-center">
+		<div class="col-4 ml-auto">{% include "jumbotron.twig" %}</div>
+		<div class="col-4 mr-auto">
+			<img src="{{TimberImage(posts[0].logo).src|better_resize(1000)}}" class="no-border img-fluid" alt="{{TimberImage(post.logo).title}}"/>
+		</div>	
+	</div>
 	<div class="row">
 		<div class="col-10 offset-1 col-md-8 offset-md-2">
-			{% if landing %}
-				<div class="row">
-					<div class="col-md-8 offset-md-2">
-						<img src="{{TimberImage(posts[0].logo).src|better_resize(1000)}}" class="no-border img-fluid" alt="{{TimberImage(post.logo).title}}"/>
-					</div>
-				</div>
-				<div class="row">
-					{{landing.post_content|shortcodes}}
-				</div>
-			{% else %}
-				{% for post in posts %}
-					{{post.about}}
-				{% endfor %}
-			{% endif %}
+			{% for post in posts %}
+				{{post.content}}
+			{% endfor %}
 		</div>
 	</div>
 {% endblock %}

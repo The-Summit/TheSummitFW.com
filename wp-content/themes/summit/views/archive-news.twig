@@ -1,8 +1,11 @@
 {% extends "archive-default.twig" %}
 {% block source %}archive-news.twig{% endblock %}
-{% block title %}Campus News{% endblock %}
-{% block description %}Our campus is a beehive of activity, and great things are happening here every day. Here are some of the most newsworthy items!{% endblock %}
 
+{% block jumbo %}
+{% set jumbo_text = "Our campus is a beehive of activity, and great things are happening here every day. Here are some of the most newsworthy items!" %}
+{% set jumbo_title = "Campus News" %}
+{% include "jumbotron.twig" %}
+{% endblock %}
 {% block postfilter %}
 <ul class="col-md-6 offset-md-3">
 	{% for post in posts if post.parent==0 %}

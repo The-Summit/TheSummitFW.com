@@ -108,23 +108,27 @@ span.amp {
 	}
 	.alignright{
 		@extend .ml-auto;
-		@extend .col-md-4;
+		@extend .col-md-6;
 	}
 	.alignleft{
 		@extend .mr-auto;
-		@extend .col-md-4;
+		@extend .col-md-6;
 	}	
-	img[class^="wp-image"]{
+	#content img{
 		@extend .img-fluid;
 	}
 }
 .single-programs-thriving-schools{
+	$brand: rgb(250,148,35);
 	#content{
 		img{
-			border: 10px solid rgb(250,148,35);
+			border: 10px solid $brand;
 		}
 		img.no-border{
 			border: none;
 		}
+	}
+	h3{
+		color: $brand;
 	}
 }
