@@ -2,9 +2,13 @@
 {% block content %}
 	{% set jumbo_text = posts[0].jumbotron_blurb %}
 	{% set jumbo_title = posts[0].title %}
-	{% include "jumbotron.twig" %}
+	<div class="row align-items-center">
+		<div class="col-4 ml-auto">{% include "jumbotron.twig" %}</div>
+		<div class="col-4 mr-auto">
+			<img src="{{ posts[0].thumbnail.src }}" class="img-fluid" alt="{{ posts[0].title }}" />
+		</div>	
+	</div>
 	<div class="container">
-		<img src="{{ posts[0].thumbnail.src }}" class="img-fluid" alt="{{ posts[0].title }}" />
 		{{ posts[0].content|wpautop }}
 	</div>		
 {% endblock %}
