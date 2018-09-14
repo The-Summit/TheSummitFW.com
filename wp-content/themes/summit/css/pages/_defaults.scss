@@ -131,3 +131,17 @@ span.amp {
 		color: $brand;
 	}
 }
+.single-programs-thriving-churches{
+	$brand: rgb(129,64,153);
+	#content{
+		img{
+			border: 10px solid $brand;
+		}
+		img.no-border{
+			border: none;
+		}
+	}
+	h3{
+		color: $brand;
+	}
+}
