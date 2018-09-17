@@ -1,8 +1,8 @@
 {% extends "page.twig" %}
 {% block extra %}
-	<p class="display-4">Since we installed the panels in December, 2017, we've saved <strong>{{solar.env.envBenefits.gasEmissionSaved.co2|number_format(2)}} pounds</strong> of CO2 emissions, which is equivalent to <br />
-	<strong>{{solar.env.envBenefits.treesPlanted|number_format(2)}} trees </strong> planted or <strong>{{solar.env.envBenefits.lightBulbs|number_format(2)}} days of light bulbs </strong> taken out of service!</p>
+	<p class="display-4">Since we installed the panels in December, 2017, we've saved <strong>{{solar.env.envBenefits.gasEmissionSaved.co2|number_format(0)}} pounds</strong> of CO2 emissions, which is equivalent to <br />
+	<strong>{{solar.env.envBenefits.treesPlanted|number_format(0)}} trees </strong> planted or <strong>{{solar.env.envBenefits.lightBulbs|number_format(0)}} days of light bulbs </strong> taken out of service!</p>
 	
-	<p class="display-4 my-5">Our panels are currently generating {{solar.energy.overview.currentPower.power|number_format(0)}} watts of power, which is enough to power {{(solar.energy.overview.currentPower.power / 60)|number_format(0)}} incandescent light bulbs!</p>
+	<p class="display-4 my-5">Our panels are currently generating <strong>{{solar.energy.overview.currentPower.power|number_format(0)}} watts </strong> of power, which is enough to power {{(solar.energy.overview.currentPower.power / 60)|number_format(0)}} incandescent light bulbs! This is <strong>{{(solar.energy.overview.currentPower.power / 1000)|number_format(0)}}%</strong> of the array's rated capacity.</p>
 {% endblock %}
 {% block source %}page.twig{% endblock %}
