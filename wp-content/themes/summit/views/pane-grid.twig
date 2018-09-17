@@ -25,7 +25,7 @@
 									{% endif %}							
 									{% set rates = {"hourly":post.regular_hourly_rate,"half-day":post.regular_half_day_rate,"full-day":post.regular_full_day_rate,"nightly":post.regular_nightly_rate} %}
 									{% for key,rate in rates%}
-										<li class="rate">{% if rate %}<strong>{{key}}:</strong> <a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}">${{rate}}</a>{% endif %}
+										{% if rate %}<li class="rate"><strong>{{key}}:</strong> <a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}">${{rate}}</a></li>{% endif %}
 									{% endfor %}		
 									{% if rates["hourly"] > 0 or rates["nightly"] > 0 or rates["half-day"] > 0 %}
 										<li><a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}" class="btn btn-primary">Contact to Book!</a></li>
