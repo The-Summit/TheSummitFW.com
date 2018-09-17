@@ -106,7 +106,7 @@ function gravity_posts_of_type($type,$blank = false,$link = false){
 	}
 	foreach($posts as $post){
 		if($link){
-			$label = "<a target='_blank' href='/" . $type . "#" . $post->post_name . "'>" . $post->post_title . "</a>";
+			$label = "<a target='_blank' href='/" . $type . "/" . $post->post_name . "'>" . $post->post_title . "</a>";
 		}else{
 			$label = $post->post_title;
 		}
