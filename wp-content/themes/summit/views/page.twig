@@ -10,6 +10,7 @@
 	</div>
 	<div class="container">
 		{{ posts[0].content|wpautop }}
+		{% block extra %}{% endblock %}
 	</div>		
 {% endblock %}
 {% block source %}page.twig{% endblock %}

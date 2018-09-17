@@ -43,6 +43,16 @@ if(is_main_site() && !is_admin()){
 		Routes::load('category.php', $params, $query, 200);
 	});
 }
+add_filter('timber_context', solar_mod);
+function solar_mod( $post_object ) {
+	if(is_page("solar")){
+		$data["env"] = json_decode(file_get_contents("https://monitoringapi.solaredge.com/site/582917/envBenefits.json?systemUnits=Imperial&api_key=IJJDOIRS5WZYTZTXHUR8FBJME6B9O46E"));
+		$data["energy"] = json_decode(file_get_contents("https://monitoringapi.solaredge.com/site/582917/overview.json?api_key=IJJDOIRS5WZYTZTXHUR8FBJME6B9O46E"));
+		$context["solar"] = $data;
+		
+		return $context;
+	}
+}
 /* Clean up HEAD */
 remove_action ('wp_head', 'rsd_link');
 remove_action( 'wp_head', 'wlwmanifest_link');
