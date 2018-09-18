@@ -1,13 +1,13 @@
 {% extends "base.twig" %}
 {% block source %}single-programs.twig{% endblock %}
-{% block bodyclass %}single-programs-{{posts[0].title|sanitize|lower}}{% endblock %}
+{% block bodyclass %}single-programs single-programs-{{posts[0].title|sanitize|lower}}{% endblock %}
 
 {% block content %}
 	{% set jumbo_text = posts[0].jumbotron_blurb %}
 	{% set jumbo_title = posts[0].title %}
 	<div class="row align-items-center">
-		<div class="col-4 ml-auto">{% include "jumbotron.twig" %}</div>
-		<div class="col-4 mr-auto">
+		<div class="col-lg-4 ml-auto">{% include "jumbotron.twig" %}</div>
+		<div class="col-lg-4 mr-auto">
 			<img src="{{TimberImage(posts[0].logo).src|better_resize(1000)}}" class="no-border img-fluid" alt="{{TimberImage(post.logo).title}}"/>
 		</div>	
 	</div>

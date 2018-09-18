@@ -3,8 +3,8 @@
 	{% set jumbo_text = posts[0].jumbotron_blurb %}
 	{% set jumbo_title = posts[0].title %}
 	<div class="row align-items-center">
-		<div class="col-4 ml-auto">{% include "jumbotron.twig" %}</div>
-		<div class="col-4 mr-auto">
+		<div class="col-lg-4 ml-auto">{% include "jumbotron.twig" %}</div>
+		<div class="col-lg-4 mr-auto">
 			<img src="{{ posts[0].thumbnail.src }}" class="img-fluid" alt="{{ posts[0].title }}" />
 		</div>	
 	</div>
