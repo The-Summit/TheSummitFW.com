@@ -1,8 +1,38 @@
 {% extends "page.twig" %}
 {% block extra %}
-	<p class="display-4 my-5">Since we installed the panels in December, 2017, we've saved <strong>{{solar.env.envBenefits.gasEmissionSaved.co2|number_format(0)}} pounds</strong> of CO2 emissions, which is equivalent to <br />
-	<strong>{{solar.env.envBenefits.treesPlanted|number_format(0)}} trees </strong> planted or <strong>{{solar.env.envBenefits.lightBulbs|number_format(0)}} days of light bulbs </strong> taken out of service!</p>
+	<p class="display-4 my-5 countup invisible">Since we installed the panels in December, 2017, we've saved <strong>{{solar.env.envBenefits.gasEmissionSaved.co2|number_format(0)}}</strong> pounds of CO2 emissions, which is equivalent to	<strong>{{solar.env.envBenefits.treesPlanted|number_format(0)}}</strong> trees planted or <strong>{{solar.env.envBenefits.lightBulbs|number_format(0)}}</strong> days of light bulbs  taken out of service!</p>
 	
-	<p class="display-4 my-5">Our panels are currently generating <strong>{{solar.energy.overview.currentPower.power|number_format(0)}} watts </strong> of power, which is enough to power {{(solar.energy.overview.currentPower.power / 60)|number_format(0)}} incandescent light bulbs! This is <strong>{{(solar.energy.overview.currentPower.power / 1000)|number_format(0)}}%</strong> of the array's rated capacity.</p>
+	<p class="display-4 my-5 countup invisible">Our panels are currently generating <strong>{{solar.energy.overview.currentPower.power|number_format(0)}}</strong> watts of power, which is enough to power <strong>{{(solar.energy.overview.currentPower.power / 60)|number_format(0)}}</strong> incandescent light bulbs! This is <strong>{{(solar.energy.overview.currentPower.power / 1000)|number_format(0)}}</strong>% of the array's rated capacity.</p>
 {% endblock %}
 {% block source %}page.twig{% endblock %}
+{% block add_script %}
+	<script src="/wp-content/themes/summit/js/countUp.min.js"></script>
+	<script>
+			var loadSolar = function(){
+				var options = {
+					useEasing: true, 
+					useGrouping: true, 
+					separator: ',', 
+					decimal: '.', 
+				};
+				var els = document.querySelectorAll(".countup strong");
+				els.forEach(function(element){
+					var value = element.innerHTML.replace(/\,/g,'');
+					var countup = new CountUp(element, 0, value, 0, 4, options);
+					countup.start();
+				});	
+				els = document.querySelectorAll(".countup");
+				els.forEach(function(element){
+					element.classList.remove("invisible");
+				});
+			}
+			if (
+				document.readyState === "complete" ||
+				(document.readyState !== "loading" && !document.documentElement.doScroll)
+			) {
+				loadSolar();
+			} else {
+				document.addEventListener("DOMContentLoaded", loadSolar);
+			}			
+	</script>
+{% endblock %}

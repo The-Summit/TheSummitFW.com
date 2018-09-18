@@ -14,6 +14,7 @@
 		<footer id="footer">
 			{% include 'footer.twig' %}
 			{% include 'ga.twig' %}
+			{% block add_script %}{% endblock %}
 		</footer>
 		{{ function('wp_footer') }}
     </body>
