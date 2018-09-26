@@ -1,6 +1,6 @@
 {% if not post.hidden %}
-	<div class="col-md-6 col-lg-4 col-12">
-	<div class="card">
+	<div class="{% if post.type == "bios" %}col-12 col-md-6 col-lg-3 col-xl-3{% else %}col-md-6 col-lg-4 col-12{% endif %}">
+	<div class="card {% if post.type == "bios" %}bio{% endif %}">
 	{% if post.background_image %}
 		{% set img = post.background_image %}
 	{% else %}
@@ -16,25 +16,31 @@
 					{% else %}
 						{% set website = post.link %}
 					{% endif %}
-							<div class="col-12 col-md-4">
-								<ul class="list-unstyled">
-									{% if post.logo %}
-										<li><a target="_blank" href="{{website}}"><img src="{{TimberImage(post.logo).src|better_resize(500)}}" class="img-fluid partner-brand" alt="{{TimberImage(post.logo).title}}"/></a></li>
-									{% else %}
-										<li class="h3">{{post.title}}</li>
-									{% endif %}							
-									{% set rates = {"hourly":post.regular_hourly_rate,"half-day":post.regular_half_day_rate,"full-day":post.regular_full_day_rate,"nightly":post.regular_nightly_rate} %}
-									{% if rates["hourly"] > 0 or rates["nightly"] > 0 or rates["half-day"] > 0 %}
-										<li class="my-3"><a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}" class="btn btn-primary">Contact to Book!</a></li>
-										{% set learn_more = false %}
-									{% endif %}
-									{% for key,rate in rates%}
-										{% if rate %}<li class="rate"><strong>{{key}}:</strong> <a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}">${{rate}}</a></li>{% endif %}
-									{% endfor %}											
-									<li>{% if post.building %}<strong>Where: </strong><br/><a href="/campus-map#b{{post.building.building_number}},{%if post.door %}d{{post.door}}{% endif %}">{{post.building.title}}</a></li>{% endif %}
-								</ul>
-								{% if website and learn_more %}<p class="mt-3"><a class="btn btn-primary" href="{{website}}">Learn More!</a></p>{% endif %}
+						{% if post.type == "bios" %}
+							<div class="col-12">
+								<h4>{{ post.title }}</h4>
+								<p>{{ post.role_title }}</p>
 							</div>
+						{% else %}		
+						<div class="col-12 col-md-4">
+							<ul class="list-unstyled">
+								{% if post.logo %}
+									<li><a target="_blank" href="{{website}}"><img src="{{TimberImage(post.logo).src|better_resize(500)}}" class="img-fluid partner-brand" alt="{{TimberImage(post.logo).title}}"/></a></li>
+								{% else %}
+									<li class="h3">{{post.title}}</li>
+								{% endif %}							
+								{% set rates = {"hourly":post.regular_hourly_rate,"half-day":post.regular_half_day_rate,"full-day":post.regular_full_day_rate,"nightly":post.regular_nightly_rate} %}
+								{% if rates["hourly"] > 0 or rates["nightly"] > 0 or rates["half-day"] > 0 %}
+									<li class="my-3"><a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}" class="btn btn-primary">Contact to Book!</a></li>
+									{% set learn_more = false %}
+								{% endif %}
+								{% for key,rate in rates%}
+									{% if rate %}<li class="rate"><strong>{{key}}:</strong> <a href="/contact-us?reason=rent&amp;property_name={{post.post_name}}">${{rate}}</a></li>{% endif %}
+								{% endfor %}											
+								<li>{% if post.building %}<strong>Where: </strong><br/><a href="/campus-map#b{{post.building.building_number}},{%if post.door %}d{{post.door}}{% endif %}">{{post.building.title}}</a></li>{% endif %}
+							</ul>
+							{% if website and learn_more %}<p class="mt-3"><a class="btn btn-primary" href="{{website}}">Learn More!</a></p>{% endif %}
+						</div>
 						<div class="col-12 col-md-8">
 							{% if post.about %}
 								{{ post.about|wpautop }}
@@ -42,6 +48,7 @@
 								{{ post.content|wpautop }}
 							{% endif %}
 						</div>
+							{% endif %}
 					</div>
 				</div>
 			</div>

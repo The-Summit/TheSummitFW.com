@@ -145,3 +145,13 @@ span.amp {
 		color: $brand;
 	}
 }
+.card-img-top{
+	object-fit: cover;
+	object-position: center 20%;
+	height: 30vh;
+	min-height: 400px;
+}
+.card-deck .card.bio{
+	margin-left: 0px;
+	margin-right: 0px;
+}
