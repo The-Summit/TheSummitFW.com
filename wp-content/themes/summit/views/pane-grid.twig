@@ -33,7 +33,7 @@
 									{% endfor %}											
 									<li>{% if post.building %}<strong>Where: </strong><br/><a href="/campus-map#b{{post.building.building_number}},{%if post.door %}d{{post.door}}{% endif %}">{{post.building.title}}</a></li>{% endif %}
 								</ul>
-								{% if website and learn_more %}<p class="mt-3><a class="btn btn-primary" href="{{website}}">Learn More!</a></p>{% endif %}
+								{% if website and learn_more %}<p class="mt-3"><a class="btn btn-primary" href="{{website}}">Learn More!</a></p>{% endif %}
 							</div>
 						<div class="col-12 col-md-8">
 							{% if post.about %}
