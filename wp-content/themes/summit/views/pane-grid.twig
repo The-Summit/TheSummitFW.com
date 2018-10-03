@@ -15,7 +15,7 @@
 					{% for i in img %}
 						{% if i|length >0 %}
 							<div class="carousel-item {%if loop.index == 1 %}active{%endif%}">
-								<img class="card-img-top" src="{{TimberImage(i).src|better_resize(400)}}" />
+								<img class="card-img-top" src="{{TimberImage(i).src|better_resize(600)}}" />
 							</div>
 						{% endif %}							
 					{% endfor %}
