@@ -4,12 +4,14 @@
 
 {% block content %}
 	{% set jumbo_text = posts[0].jumbotron_blurb %}
-	{% set jumbo_title = posts[0].title %}
+	{% set jumbo_title = "" %}
 	<div class="row align-items-center">
-		<div class="col-lg-4 ml-auto">{% include "jumbotron.twig" %}</div>
-		<div class="col-lg-4 mr-auto">
+		<div class="col-lg-3 mt-5 ml-auto mr-auto">
 			<img src="{{TimberImage(posts[0].logo).src|better_resize(1000)}}" class="no-border img-fluid" alt="{{TimberImage(post.logo).title}}"/>
 		</div>	
+	</div>
+	<div class="row">
+		<p class="col-lg-6 lead mt-0 pt-0 ml-auto mr-auto">{{jumbo_text}}</p>
 	</div>
 	<div class="row">
 		<div class="col-10 offset-1 col-md-8 offset-md-2">
